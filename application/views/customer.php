@@ -1,0 +1,143 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+?><!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
+	<title>Customer</title></head>
+<body>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">Logo</a>
+		</div>
+		<ul class="nav navbar-nav navbar-left">
+			<li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="http://localhost/htdocs/index.php/User/customerPage">Manage Customers</a></li>
+	            <li><a href="#" data-toggle="modal" data-target="#addCustomer">Quick Add</a></li>
+	          </ul>
+	        </li>
+			<li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Materials <span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Manage Materials</a></li>
+	            <li><a href="#">Quick Add</a></li>
+	          </ul>
+	        </li>
+			<li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoice <span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Manage Invoices</a></li>
+	            <li><a href="#">Quick Add</a></li>
+	          </ul>
+	        </li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="http://localhost/htdocs/index.php/User/logout">Logout</a></li>
+		</ul>
+	</div>
+</nav>
+
+<div class="modal fade" id="addCustomer" tabindex="-1" role="dialog" aria-labelledby="addCustomer" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Add Customer</h4>
+			</div>
+			<div class="modal-body">
+				<?php echo form_open('User/addCustomer');?>
+					<div class="form-group">
+						<label for="forenameInput">Forename</label>
+						<input type="text" name="forename" placeholder="John"><br>
+					</div>
+					<div class="form-group">
+						<label for="surnameInput">Surname</label>
+						<input type="text" name="surname" placeholder="Smith"><br>
+					</div>
+					<div class="form-group">
+						<label for="addressLine1Input">Address Line 1</label>
+						<input type="text" name="addressLine1" placeholder="10 Example Road"><br>
+					</div>
+					<div class="form-group">
+						<label for="addressLine2Input">Address Line 2</label>
+						<input type="text" name="addressLine2" placeholder="Optional"><br>
+					</div>
+					<div class="form-group">
+						<label for="addressLine3Input">Address Line 3</label>
+						<input type="text" name="addressLine3" placeholder="Optional"><br>
+					</div>
+					<div class="form-group">
+						<label for="cityInput">City</label>
+						<input type="text" name="city" placeholder="Ipswich"><br>
+					</div>
+					<div class="form-group">
+						<label for="postcodeInput">Postcode</label>
+						<input type="text" name="postcode" placeholder="IP11 0ST"><br>
+					</div>
+					<div class="form-group">
+						<label for="telephoneNumberInput">Telephone Number</label>
+						<input type="text" name="telephoneNumber" placeholder="07950881070"><br>
+					</div>
+					<div class="form-group">
+						<label for="emailInput">Email</label>
+						<input type="text" name="email" placeholder="example@example.com"><br>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary mdl">Add Customer</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+<div class="container">
+	<div class="row">
+				<h1>Welcome to the customer page</h1>
+				<table class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<td><strong>Forename</strong></td>
+							<td><strong>Surname</strong></td>
+							<td><strong>Address Line 1</strong></td>
+							<td><strong>Address Line 2</strong></td>
+							<td><strong>Address line 3</strong></td>
+							<td><strong>City</strong></td>
+							<td><strong>Postcode</strong></td>
+							<td><strong>Telephone Number</strong></td>
+							<td><strong>Email</strong></td>
+						</tr>
+					</thead>
+					<tbody>
+						<?php 
+						foreach ($customer as $customers) { ?>
+							<tr>
+								<td><?php echo $customers->forename; ?></td>
+								<td><?php echo $customers->surname; ?></td>
+								<td><?php echo $customers->addressLine1; ?></td>
+								<td><?php echo $customers->addressLine2; ?></td>
+								<td><?php echo $customers->addressLine3; ?></td>
+								<td><?php echo $customers->city; ?></td>
+								<td><?php echo $customers->postcode; ?></td>
+								<td><?php echo $customers->telephoneNumber; ?></td>
+								<td><?php echo $customers->email; ?></td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
