@@ -104,6 +104,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="container">
 	<div class="row">
 				<h1>Welcome to the customer page</h1>
+				<?php echo form_open('User/searchCustomer');?>
+					<div class="form-inline">
+						<div class="form-group">
+							<input type="text" name="search" placeholder="14 Test Lane"><br>
+						</div>
+						<button type="submit" class="btn btn-default inline">Search</button>
+					</div>
+					
+				</form>
 				<table class="table table-striped table-bordered">
 					<thead>
 						<tr>

@@ -53,6 +53,14 @@ Class Table extends CI_Model {
 		return $query->result();
 	}
 
+	public function customerSearch($search){
+		$this->db->select('*');
+		$this->db->from('customers');
+		$this->db->like('addressLine1', $search);
+		$query = $this->db->get();
+
+		return $query->result();
+	}
 
 }
 ?>

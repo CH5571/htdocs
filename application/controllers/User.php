@@ -132,6 +132,20 @@ Class User extends CI_Controller{
 		}
 	}
 
+	public function searchCustomer(){
+		$this->form_validation->set_rules('search', 'Search', 'required|max_length[100]');
+
+		if (!$this->form_validation->run()) {
+			$error = validation_errors();
+		} else {
+			$search = $this->input->post('search');
+			//get search results from model
+			$data['customer'] = $this->Table->customerSearch($search);
+			$this->load->view('customer', $data);
+			//TODO ADD MESSAGE IF NO RESULTS PRESENT 
+		}
+	}
+
 	public function logout(){
 		$this->ion_auth->logout();
 		$this->load->helper('form');
