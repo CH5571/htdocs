@@ -29,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Materials <span class="caret"></span></a>
 	          <ul class="dropdown-menu">
 	            <li><a href="#">Manage Materials</a></li>
-	            <li><a href="#">Quick Add</a></li>
+	            <li><a href="#" data-toggle="modal" data-target="#addMaterial">Quick Add</a></li>
 	          </ul>
 	        </li>
 			<li class="dropdown">
@@ -98,7 +98,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 		</div>
 	</div>
-	
+</div>
+
+<div class="modal fade" id="addMaterial" tabindex="-1" role="dialog" aria-labelledby="addMaterial" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Add Customer</h4>
+			</div>
+			<div class="modal-body">
+				<?php echo form_open('User/addMaterial');?>
+					<div class="form-group">
+						<label for="forenameInput">Material Name</label>
+						<input type="text" name="materialName" placeholder="Screw"><br>
+					</div>
+					<div class="form-group">
+						<label for="surnameInput">Price</label>
+						<input type="number" name="price" step="any" placeholder="£5.00"><br>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary mdl">Add Material</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>	
 </div>
 
 <div class="container">

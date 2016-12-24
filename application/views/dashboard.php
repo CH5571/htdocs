@@ -1,10 +1,5 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
-//check if user is logged in
-if ($this->session->userdata('username') === NULL) {
-	redirect('User/index');
-}
 ?>
 <!DOCTYPE html>
 <html>

@@ -8,7 +8,9 @@ Class User extends CI_Controller{
 		parent::__construct();
 		$this->load->library('ion_auth');
 		$this->load->library('form_validation');
+		$this->load->library('session');
 		$this->load->helper('form');
+		$this->load->helper('url');
 		$this->load->model('Table');
 	}
 
@@ -39,19 +41,39 @@ Class User extends CI_Controller{
 		
 	}
 
-	public function dashboard(){
-		$this->load->view('dashboard');
+	public function isLoggedIn(){
+		$sess_id = $this->session->userdata('user_id');
+		if (empty($sess_id)) {
+			return FALSE;
+		} else {
+			return TRUE;
+		}
 	}
 
-	public function adminPage() {
-		
-		$data['user'] = $this->Table->getUsers();
-		$this->load->view('adminDashboard', $data);
+	public function dashboard(){
+		if ($this->isLoggedIn() == TRUE){
+			$this->load->view('dashboard');
+		} else {
+			$this->load->view('welcome_message');
+		}
+	}
+
+	public function adminPage() {	
+			$data['user'] = $this->Table->getUsers();
+			if ($this->isLoggedIn() == TRUE && $this->ion_auth->is_admin() == TRUE){
+				$this->load->view('adminDashboard', $data);
+			} else {
+				$this->load->view('welcome_message');
+			}
 	}
 
 	public function customerPage(){
 		$data['customer'] = $this->Table->getCustomers();
-		$this->load->view('customer', $data);
+		if ($this->isLoggedIn() == TRUE){
+			$this->load->view('customer', $data);
+		} else {
+			$this->load->view('welcome_message');
+		}
 	}
 
 	public function addUser(){
@@ -115,9 +137,14 @@ Class User extends CI_Controller{
 				'email' => $email
 			);
 
+			//get current page
+			$currentPage = $this->uri->uri_string();
+
 			$this->Table->addCustomer($data);
 
-			redirect('User/customerPage','refresh');
+			echo '<script>alert("Customer successfully added!");</script>';
+			//TODO Add code to determine users page so they are not redirected to an incorrect page
+			redirect(base_url().$currentPage, 'refresh');
 		}
 	}
 
@@ -143,6 +170,18 @@ Class User extends CI_Controller{
 			$data['customer'] = $this->Table->customerSearch($search);
 			$this->load->view('customer', $data);
 			//TODO ADD MESSAGE IF NO RESULTS PRESENT 
+		}
+	}
+
+	public function addMaterial(){
+		$this->form_validation->set_rules('materialName', 'MaterialName', 'required|max_length[45]');
+		$this->form_validation->set_rules('price', 'Price', 'required');
+
+		if (!$this->form_validation->run()) {
+
+		} else {
+			
+			echo '<script>alert("Material successfully added!");</script>';
 		}
 	}
 
