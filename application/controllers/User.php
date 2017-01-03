@@ -42,12 +42,10 @@ Class User extends CI_Controller{
 	}
 
 	public function isLoggedIn(){
-		$sess_id = $this->session->userdata('user_id');
-		if (empty($sess_id)) {
-			return FALSE;
-		} else {
-			return TRUE;
-		}
+		//TODO FIX PROBBLEM WITH MATERIALS AND CUSTOMER PAGE VERIFICATION
+		$logged = $this->session->userdata('logged_in');
+
+		return $logged;
 	}
 
 	public function dashboard(){
@@ -69,11 +67,14 @@ Class User extends CI_Controller{
 
 	public function customerPage(){
 		$data['customer'] = $this->Table->getCustomers();
-		if ($this->isLoggedIn() == TRUE){
-			$this->load->view('customer', $data);
-		} else {
-			$this->load->view('welcome_message');
-		}
+		$this->load->view('customer', $data);
+
+	}
+
+	public function materialPage(){
+		$data['material'] = $this->Table->getMaterials();
+		$this->load->view('material', $data);
+		$this->load->view('welcome_message');
 	}
 
 	public function addUser(){

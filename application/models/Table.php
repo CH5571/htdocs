@@ -62,5 +62,13 @@ Class Table extends CI_Model {
 		return $query->result();
 	}
 
+	public function getMaterials(){
+		$this->db->select('*');
+		$this->db->from('materials');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
 }
 ?>

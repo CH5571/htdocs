@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Materials <span class="caret"></span></a>
 	          <ul class="dropdown-menu">
-	            <li><a href="http://localhost/htdocs/index.php/User/materialPage">Manage Materials</a></li>
+	            <li><a href="#">Manage Materials</a></li>
 	            <li><a href="#" data-toggle="modal" data-target="#addMaterial">Quick Add</a></li>
 	          </ul>
 	        </li>
@@ -105,7 +105,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Add Material</h4>
+				<h4 class="modal-title">Add Customer</h4>
 			</div>
 			<div class="modal-body">
 				<?php echo form_open('User/addMaterial');?>
@@ -115,7 +115,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 					<div class="form-group">
 						<label for="surnameInput">Price</label>
-						<input type="number" name="price" step="any" placeholder="5.00"><br>
+						<input type="number" name="price" step="any" placeholder="£5.00"><br>
 					</div>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary mdl">Add Material</button>
@@ -128,48 +128,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div class="container">
 	<div class="row">
-				<h1>Welcome to the customer page</h1>
-				<?php echo form_open('User/searchCustomer');?>
-					<div class="form-inline">
-						<div class="form-group">
-							<input type="text" name="search" placeholder="14 Test Lane"><br>
-						</div>
-						<button type="submit" class="btn btn-default inline">Search</button>
-					</div>
-					
-				</form>
-				<table class="table table-striped table-bordered">
-					<thead>
-						<tr>
-							<td><strong>Forename</strong></td>
-							<td><strong>Surname</strong></td>
-							<td><strong>Address Line 1</strong></td>
-							<td><strong>Address Line 2</strong></td>
-							<td><strong>Address line 3</strong></td>
-							<td><strong>City</strong></td>
-							<td><strong>Postcode</strong></td>
-							<td><strong>Telephone Number</strong></td>
-							<td><strong>Email</strong></td>
-						</tr>
-					</thead>
-					<tbody>
-						<?php 
-						foreach ($customer as $customers) { ?>
-							<tr>
-								<td><?php echo $customers->forename; ?></td>
-								<td><?php echo $customers->surname; ?></td>
-								<td><?php echo $customers->addressLine1; ?></td>
-								<td><?php echo $customers->addressLine2; ?></td>
-								<td><?php echo $customers->addressLine3; ?></td>
-								<td><?php echo $customers->city; ?></td>
-								<td><?php echo $customers->postcode; ?></td>
-								<td><?php echo $customers->telephoneNumber; ?></td>
-								<td><?php echo $customers->email; ?></td>
-							</tr>
-						<?php } ?>
-					</tbody>
-				</table>
-		</div>
+		<h1>Welcome to the Material page</h1>
 	</div>
 </div>
 
