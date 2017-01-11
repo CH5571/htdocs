@@ -158,7 +158,7 @@ Class User extends CI_Controller{
 
 			echo '<script>alert("Customer successfully added!");</script>';
 			//TODO Add code to determine users page so they are not redirected to an incorrect page
-			redirect("http://[::1]/htdocs/index.php".$currentPage, 'refresh');
+			redirect('User/customerPage', 'refresh');
 		}
 	}
 
