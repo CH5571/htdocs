@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<a class="navbar-brand" href="#">Logo</a>
 		</div>
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="http://localhost/htdocs/index.php/User/logout">Logout</a></li>
+			<li><a href="http://[::1]/htdocs/index.php/User/logout">Logout</a></li>
 		</ul>
 	</div>
 </nav>

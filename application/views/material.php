@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
-	<title>Customer</title></head>
+	<title>Materials</title></head>
 <body>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -18,17 +18,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<a class="navbar-brand" href="#">Logo</a>
 		</div>
 		<ul class="nav navbar-nav navbar-left">
+			<li><a href="http://[::1]/htdocs/index.php/User/dashboard">Dashboard</a></li>
 			<li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
 	          <ul class="dropdown-menu">
-	            <li><a href="http://localhost/htdocs/index.php/User/customerPage">Manage Customers</a></li>
+	            <li><a href="http://[::1]/htdocs/index.php/User/customerPage">Manage Customers</a></li>
 	            <li><a href="#" data-toggle="modal" data-target="#addCustomer">Quick Add</a></li>
 	          </ul>
 	        </li>
 			<li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Materials <span class="caret"></span></a>
 	          <ul class="dropdown-menu">
-	            <li><a href="#">Manage Materials</a></li>
+	            <li><a href="http://[::1]/htdocs/index.php/User/materialPage">Manage Materials</a></li>
 	            <li><a href="#" data-toggle="modal" data-target="#addMaterial">Quick Add</a></li>
 	          </ul>
 	        </li>
@@ -41,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	        </li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="http://localhost/htdocs/index.php/User/logout">Logout</a></li>
+			<li><a href="http://[::1]/htdocs/index.php/User/logout">Logout</a></li>
 		</ul>
 	</div>
 </nav>
@@ -129,6 +130,36 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="container">
 	<div class="row">
 		<h1>Welcome to the Material page</h1>
+		<?php echo form_open('User/searchMaterial');?>
+			<div class="form-inline">
+				<div class="form-group">
+					<input type="text" name="search" placeholder="Item"><br>
+				</div>
+				<button type="submit" class="btn btn-default inline">Search</button>
+			</div>
+					
+		</form>
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<td><strong>Material Name</strong></td>
+					<td><strong>Price</strong></td>
+				</tr>
+			</thead>
+			<tbody>
+				<?php 
+				foreach ($material as $materials) { ?>
+					<tr>
+						<td><?php echo $materials->materialName; ?></td>
+						<td><?php echo '£'.$materials->price; ?></td>
+					</tr>
+				<?php } ?>
+			</tbody>
+		</table> 
+		<?php
+		if ($this->session->flashdata('search')) { //Use Font Awesome?>
+			<a href="http://[::1]/htdocs/index.php/User/materialPage">Back</a>
+	    <?php } ?>
 	</div>
 </div>
 

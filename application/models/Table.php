@@ -13,8 +13,8 @@ Class Table extends CI_Model {
 
 	}
 
-	public function addMaterial(){
-
+	public function addMaterial($data){
+		$this->db->insert('materials', $data);
 	}
 
 	public function editMaterial(){
@@ -65,6 +65,15 @@ Class Table extends CI_Model {
 	public function getMaterials(){
 		$this->db->select('*');
 		$this->db->from('materials');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
+	public function materialSearch($search){
+		$this->db->select('*');
+		$this->db->from('materials');
+		$this->db->like('materialName', $search);
 		$query = $this->db->get();
 
 		return $query->result();

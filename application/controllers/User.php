@@ -6,16 +6,20 @@ Class User extends CI_Controller{
 
 	public function __construct(){
 		parent::__construct();
-		$this->load->library('ion_auth');
 		$this->load->library('form_validation');
-		$this->load->library('session');
 		$this->load->helper('form');
 		$this->load->helper('url');
 		$this->load->model('Table');
+		//TODO Fix
+		
+		/*if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		}
+		*/
+		
 	}
 
 	public function index(){
-		$this->load->helper('form');
 		$this->load->view('welcome_message');
 	}
 
@@ -34,47 +38,56 @@ Class User extends CI_Controller{
 		} else {
 			//Fix session DO NOT USE $_SESSION refer to ci manuals
 			$_SESSION['auth_message'] = $this->ion_auth->errors();
-                $this->session->mark_as_flash('auth_message');
-                $this->load->view('welcome_message');
+            $this->session->mark_as_flash('auth_message');
+            $this->load->view('welcome_message');
 
 		}
 		
 	}
 
-	public function isLoggedIn(){
-		//TODO FIX PROBBLEM WITH MATERIALS AND CUSTOMER PAGE VERIFICATION
-		$logged = $this->session->userdata('logged_in');
-
-		return $logged;
-	}
-
 	public function dashboard(){
-		if ($this->isLoggedIn() == TRUE){
-			$this->load->view('dashboard');
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
 		} else {
-			$this->load->view('welcome_message');
+			$this->load->view('dashboard');
 		}
 	}
 
 	public function adminPage() {	
+		if (!$this->ion_auth->is_admin() || !$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
 			$data['user'] = $this->Table->getUsers();
-			if ($this->isLoggedIn() == TRUE && $this->ion_auth->is_admin() == TRUE){
-				$this->load->view('adminDashboard', $data);
-			} else {
-				$this->load->view('welcome_message');
-			}
+			$this->load->view('adminDashboard', $data);
+		}
 	}
 
 	public function customerPage(){
-		$data['customer'] = $this->Table->getCustomers();
-		$this->load->view('customer', $data);
-
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			$data['customer'] = $this->Table->getCustomers();
+			$this->load->view('customer', $data);	
+		}		
 	}
 
 	public function materialPage(){
-		$data['material'] = $this->Table->getMaterials();
-		$this->load->view('material', $data);
-		$this->load->view('welcome_message');
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			$data['material'] = $this->Table->getMaterials();
+			$this->load->view('material', $data);
+		}	
+	}
+
+	public function invoicePage(){
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			//write function in table
+			$data['invoice'] = $this->Table->getInvoices();
+			$this->load->view('invoice', $data);
+		}
 	}
 
 	public function addUser(){
@@ -145,7 +158,7 @@ Class User extends CI_Controller{
 
 			echo '<script>alert("Customer successfully added!");</script>';
 			//TODO Add code to determine users page so they are not redirected to an incorrect page
-			redirect(base_url().$currentPage, 'refresh');
+			redirect("http://[::1]/htdocs/index.php".$currentPage, 'refresh');
 		}
 	}
 
@@ -169,8 +182,23 @@ Class User extends CI_Controller{
 			$search = $this->input->post('search');
 			//get search results from model
 			$data['customer'] = $this->Table->customerSearch($search);
+			$this->session->set_flashdata('search', 'TRUE');
 			$this->load->view('customer', $data);
 			//TODO ADD MESSAGE IF NO RESULTS PRESENT 
+		}
+	}
+
+	public function searchMaterial(){
+		$this->form_validation->set_rules('search', 'Search', 'required|max_length[100]');
+
+		if (!$this->form_validation->run()) {
+			$error = validation_errors();
+		} else {
+			$search = $this->input->post('search');
+
+			$data['material'] = $this->Table->materialSearch($search);
+			$this->session->set_flashdata('search', 'TRUE');
+			$this->load->view('material', $data);
 		}
 	}
 
@@ -179,9 +207,18 @@ Class User extends CI_Controller{
 		$this->form_validation->set_rules('price', 'Price', 'required');
 
 		if (!$this->form_validation->run()) {
-
+			$error = validation_errors();
 		} else {
 			
+			$data = array(
+				'materialName' => $this->input->post('materialName'),
+				'price' => $this->input->post('price')
+			);
+
+			$this->Table->addMaterial($data);
+
+			redirect('User/materialPage', 'refresh');
+
 			echo '<script>alert("Material successfully added!");</script>';
 		}
 	}

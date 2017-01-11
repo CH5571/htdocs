@@ -1,13 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
-	<title>Login</title></head>
+	<title>Invoices</title></head>
 <body>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -56,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<h4 class="modal-title">Add Customer</h4>
 			</div>
 			<div class="modal-body">
-				<?php echo form_open('User/addCustomer'); ?>
+				<?php echo form_open('User/addCustomer');?>
 					<div class="form-group">
 						<label for="forenameInput">Forename</label>
 						<input type="text" name="forename" placeholder="John"><br>
@@ -107,17 +106,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Add Material</h4>
+				<h4 class="modal-title">Add Customer</h4>
 			</div>
 			<div class="modal-body">
-				<?php echo form_open('User/addMaterial'); ?>
+				<?php echo form_open('User/addMaterial');?>
 					<div class="form-group">
-						<label for="materialNameInput">Material Name</label>
+						<label for="forenameInput">Material Name</label>
 						<input type="text" name="materialName" placeholder="Screw"><br>
 					</div>
 					<div class="form-group">
-						<label for="priceInput">Price</label>
-						<input type="text" name="price" placeholder="5.00"><br>
+						<label for="surnameInput">Price</label>
+						<input type="number" name="price" step="any" placeholder="£5.00"><br>
 					</div>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary mdl">Add Material</button>
@@ -125,16 +124,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</form>
 			</div>
 		</div>
-	</div>
+	</div>	
 </div>
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-4"></div>
-		<div class="col-md-4 text-center">
-				<h1>Welcome to the dashboard</h1>
-		</div>
-		<div class="col-md-4"></div>
+		<h1>Welcome to the Invoice page</h1>
+		<?php echo form_open('User/searchMaterial');?>
+			<div class="form-inline">
+				<div class="form-group">
+					<input type="text" name="search" placeholder="Item"><br>
+				</div>
+				<button type="submit" class="btn btn-default inline">Search</button>
+			</div>
+					
+		</form>
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<td><strong> </strong></td>
+					<td><strong>Price</strong></td>
+				</tr>
+			</thead>
+			<tbody>
+				<?php 
+				foreach ($invoice as $invoices) { ?>
+					<tr>
+						<td><?php echo $invioces->; ?></td>
+						<td><?php echo '£'.$invoices->; ?></td>
+					</tr>
+				<?php } ?>
+			</tbody>
+		</table> 
+		<?php
+		if ($this->session->flashdata('search')) { //Use Font Awesome?>
+			<a href="http://[::1]/htdocs/index.php/User/materialPage">Back</a>
+	    <?php } ?>
 	</div>
 </div>
 
