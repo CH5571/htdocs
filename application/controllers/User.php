@@ -90,6 +90,14 @@ Class User extends CI_Controller{
 		}
 	}
 
+	public function addInvoice(){
+		//$this->form_validation->set_rules()
+	}
+
+	public function invoiceCustomerSearch(){
+		//add ajax - until then use dropdown
+	}
+
 	public function addUser(){
 		$this->form_validation->set_rules('username', 'Username', 'required|max_length[100]');
 		$this->form_validation->set_rules('password', 'Password', 'required|max_length[20]');

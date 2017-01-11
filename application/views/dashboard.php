@@ -13,6 +13,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
+<script type="text/javascript">
+
+function liveCustomerSearch() {
+	var input_data = $('#liveCustomerSearch').val();
+
+	if (input_data.length > 2) {
+		var post_data = {
+			'search_data' : input_data,
+			'<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>'
+		};
+
+		$.ajax({
+			type: POST,
+			url: "http://[::1]/htdocs/index.php/User/invoiceCustomerSearch",
+			
+		})
+	}
+}
+
+</script>
+
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -121,6 +142,60 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary mdl">Add Material</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="addInvoice" tabindex="-1" role="dialog" aria-labelledby="addInvoice" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Add Invoice</h4>
+			</div>
+			<div class="modal-body">
+				<?php echo form_open('User/addInvoice'); ?>
+					<div class="form-group">
+						<label for="customerInput">Customer</label>
+						<input type="text" name="forename" placeholder="14 Test Lane" id="liveCustomerSearch" onkeyup="liveCustomerSearch();"><br>
+					</div>
+					<div class="form-group">
+						<label for="surnameInput">Surname</label>
+						<input type="text" name="surname" placeholder="Smith"><br>
+					</div>
+					<div class="form-group">
+						<label for="addressLine1Input">Address Line 1</label>
+						<input type="text" name="addressLine1" placeholder="10 Example Road"><br>
+					</div>
+					<div class="form-group">
+						<label for="addressLine2Input">Address Line 2</label>
+						<input type="text" name="addressLine2" placeholder="Optional"><br>
+					</div>
+					<div class="form-group">
+						<label for="addressLine3Input">Address Line 3</label>
+						<input type="text" name="addressLine3" placeholder="Optional"><br>
+					</div>
+					<div class="form-group">
+						<label for="cityInput">City</label>
+						<input type="text" name="city" placeholder="Ipswich"><br>
+					</div>
+					<div class="form-group">
+						<label for="postcodeInput">Postcode</label>
+						<input type="text" name="postcode" placeholder="IP11 0ST"><br>
+					</div>
+					<div class="form-group">
+						<label for="telephoneNumberInput">Telephone Number</label>
+						<input type="text" name="telephoneNumber" placeholder="07950881070"><br>
+					</div>
+					<div class="form-group">
+						<label for="emailInput">Email</label>
+						<input type="text" name="email" placeholder="example@example.com"><br>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary mdl">Add Customer</button>
 					</div>
 				</form>
 			</div>
