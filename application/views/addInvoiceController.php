@@ -6,7 +6,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
-	<title>Customer</title></head>
+	<title>Customer</title>
+</head>
 <body>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -136,6 +137,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<select class="form-control" id="customerSelect">
 					<?php foreach($customer as $customers) { ?>
 						<option value="<?php echo $customers->customerID; ?>"><?php echo $customers->addressLine1; ?></option>
+					<?php } ?>
 				</select><br>
 			</div>
 			<div class="form-group">
@@ -176,6 +178,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</form>
 	</div>
 </div>
-
 </body>
 </html>

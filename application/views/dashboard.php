@@ -18,18 +18,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 function getCustomers() {
 
+
 	$.ajax({
-		type: POST,
+		type: "POST",
 		url: "http://[::1]/htdocs/index.php/User/getCustomerJson",
 		dataType: "json",
-		success: function(data){
-
-			var opts = $.parseJSON(data);
-
-			$.each(opts, function(i, value) {
-            $('#customerSelect').append('<option value="' + value.customerID + '">' + value.forename + '</option>');
-        	});
-        }
+		 success: function(data) {
+		 		console.log(data);
+                $('select#customerSelect').html('');
+                for(var i=0;i<data.length;i++)
+                {
+                    $("<option />").val(data[i].customerID).text(data[i].addressLine1).appendTo($('select#customerSelect'));
+                }
+              }
 	});
 }
 
@@ -162,8 +163,10 @@ function getCustomers() {
 				<?php echo form_open('User/addInvoice'); ?>
 					<div class="form-group">
 						<label for="customerInput">Customer</label>
-						<input type="text" name="invoiceCustomer" id="invoiceCustomer">
-						<select class="form-control" id="customerSelect" onclick="getCustomers()"></select><br>
+						<input type="text" name="invoiceCustomer" id="invoiceCustomer" onkeyup="getCustomers();">
+						<select class="form-control" id="customerSelect">
+							<option> Select </option>
+						</select><br>
 					</div>
 					<div class="form-group">
 						<label for="surnameInput">Surname</label>

@@ -91,7 +91,8 @@ Class User extends CI_Controller{
 	}
 
 	public function getCustomerJson(){
-		$data['customer'] = $this->Table->getCustomers();
+		$address = $this->input->post('address');
+		$data = $this->Table->customerSearch($address);
 		echo json_encode($data);
 		die();
 	}
