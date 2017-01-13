@@ -90,8 +90,20 @@ Class User extends CI_Controller{
 		}
 	}
 
-	public function addInvoice(){
-		//$this->form_validation->set_rules()
+	public function getCustomerJson(){
+		$data['customer'] = $this->Table->getCustomers();
+		echo json_encode($data);
+		die();
+	}
+
+	public function addInvoiceController(){
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			$mdata['material'] = $this->Table->getMaterials();
+			$cdata['customer'] = $this->Table->getCustomers();
+			$this->load->view('addInvoiceController', $mdata, $cdata);
+		}
 	}
 
 	public function invoiceCustomerSearch(){

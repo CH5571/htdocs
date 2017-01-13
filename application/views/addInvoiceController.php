@@ -1,40 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
-	<title>Login</title></head>
+	<title>Customer</title></head>
 <body>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
-
-<script type="text/javascript">
-
-function getCustomers() {
-
-	$.ajax({
-		type: POST,
-		url: "http://[::1]/htdocs/index.php/User/getCustomerJson",
-		dataType: "json",
-		success: function(data){
-
-			var opts = $.parseJSON(data);
-
-			$.each(opts, function(i, value) {
-            $('#customerSelect').append('<option value="' + value.customerID + '">' + value.forename + '</option>');
-        	});
-        }
-	});
-}
-
-
-</script>
 
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
@@ -61,7 +37,7 @@ function getCustomers() {
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoice <span class="caret"></span></a>
 	          <ul class="dropdown-menu">
 	            <li><a href="#">Manage Invoices</a></li>
-	            <li><a href="#" data-toggle="modal" data-target="#addInvoice">Quick Add</a></li>
+	            <li><a href="#">Quick Add</a></li>
 	          </ul>
 	        </li>
 		</ul>
@@ -79,7 +55,7 @@ function getCustomers() {
 				<h4 class="modal-title">Add Customer</h4>
 			</div>
 			<div class="modal-body">
-				<?php echo form_open('User/addCustomer'); ?>
+				<?php echo form_open('User/addCustomer');?>
 					<div class="form-group">
 						<label for="forenameInput">Forename</label>
 						<input type="text" name="forename" placeholder="John"><br>
@@ -133,14 +109,14 @@ function getCustomers() {
 				<h4 class="modal-title">Add Material</h4>
 			</div>
 			<div class="modal-body">
-				<?php echo form_open('User/addMaterial'); ?>
+				<?php echo form_open('User/addMaterial');?>
 					<div class="form-group">
-						<label for="materialNameInput">Material Name</label>
+						<label for="forenameInput">Material Name</label>
 						<input type="text" name="materialName" placeholder="Screw"><br>
 					</div>
 					<div class="form-group">
-						<label for="priceInput">Price</label>
-						<input type="text" name="price" placeholder="5.00"><br>
+						<label for="surnameInput">Price</label>
+						<input type="number" name="price" step="any" placeholder="5.00"><br>
 					</div>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary mdl">Add Material</button>
@@ -148,71 +124,56 @@ function getCustomers() {
 				</form>
 			</div>
 		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="addInvoice" tabindex="-1" role="dialog" aria-labelledby="addInvoice" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Add Invoice</h4>
-			</div>
-			<div class="modal-body">
-				<?php echo form_open('User/addInvoice'); ?>
-					<div class="form-group">
-						<label for="customerInput">Customer</label>
-						<input type="text" name="invoiceCustomer" id="invoiceCustomer">
-						<select class="form-control" id="customerSelect" onclick="getCustomers()"></select><br>
-					</div>
-					<div class="form-group">
-						<label for="surnameInput">Surname</label>
-						<input type="text" name="surname" placeholder="Smith"><br>
-					</div>
-					<div class="form-group">
-						<label for="addressLine1Input">Address Line 1</label>
-						<input type="text" name="addressLine1" placeholder="10 Example Road"><br>
-					</div>
-					<div class="form-group">
-						<label for="addressLine2Input">Address Line 2</label>
-						<input type="text" name="addressLine2" placeholder="Optional"><br>
-					</div>
-					<div class="form-group">
-						<label for="addressLine3Input">Address Line 3</label>
-						<input type="text" name="addressLine3" placeholder="Optional"><br>
-					</div>
-					<div class="form-group">
-						<label for="cityInput">City</label>
-						<input type="text" name="city" placeholder="Ipswich"><br>
-					</div>
-					<div class="form-group">
-						<label for="postcodeInput">Postcode</label>
-						<input type="text" name="postcode" placeholder="IP11 0ST"><br>
-					</div>
-					<div class="form-group">
-						<label for="telephoneNumberInput">Telephone Number</label>
-						<input type="text" name="telephoneNumber" placeholder="07950881070"><br>
-					</div>
-					<div class="form-group">
-						<label for="emailInput">Email</label>
-						<input type="text" name="email" placeholder="example@example.com"><br>
-					</div>
-					<div class="modal-footer">
-						<button type="submit" class="btn btn-primary mdl">Add Customer</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+	</div>	
 </div>
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-4"></div>
-		<div class="col-md-4 text-center">
-				<h1>Welcome to the dashboard</h1>
-		</div>
-		<div class="col-md-4"></div>
+		<h1>Add Invoice</h1>
+		<?php echo form_open('User/addInvoice'); ?>
+			<div class="form-group">
+				<label for="customerInput">Customer</label>
+				<select class="form-control" id="customerSelect">
+					<?php foreach($customer as $customers) { ?>
+						<option value="<?php echo $customers->customerID; ?>"><?php echo $customers->addressLine1; ?></option>
+				</select><br>
+			</div>
+			<div class="form-group">
+				<label for="surnameInput">Surname</label>
+				<input type="text" name="surname" placeholder="Smith"><br>
+			</div>
+			<div class="form-group">
+				<label for="addressLine1Input">Address Line 1</label>
+				<input type="text" name="addressLine1" placeholder="10 Example Road"><br>
+			</div>
+			<div class="form-group">
+				<label for="addressLine2Input">Address Line 2</label>
+				<input type="text" name="addressLine2" placeholder="Optional"><br>
+			</div>
+			<div class="form-group">
+				<label for="addressLine3Input">Address Line 3</label>
+				<input type="text" name="addressLine3" placeholder="Optional"><br>
+			</div>
+			<div class="form-group">
+				<label for="cityInput">City</label>
+				<input type="text" name="city" placeholder="Ipswich"><br>
+			</div>
+			<div class="form-group">
+				<label for="postcodeInput">Postcode</label>
+				<input type="text" name="postcode" placeholder="IP11 0ST"><br>
+			</div>
+			<div class="form-group">
+				<label for="telephoneNumberInput">Telephone Number</label>
+				<input type="text" name="telephoneNumber" placeholder="07950881070"><br>
+			</div>
+			<div class="form-group">
+				<label for="emailInput">Email</label>
+				<input type="text" name="email" placeholder="example@example.com"><br>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary mdl">Add Customer</button>
+			</div>
+		</form>
 	</div>
 </div>
 
