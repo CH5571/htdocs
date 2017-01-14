@@ -17,12 +17,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script type="text/javascript">
 
 function getCustomers() {
-
+	console.log($('#invoiceCustomer').val());
 
 	$.ajax({
-		type: "POST",
 		url: "http://[::1]/htdocs/index.php/User/getCustomerJson",
+		type: "POST",
 		dataType: "json",
+		data: { 'q' : $("#invoiceCustomer").val() },
 		 success: function(data) {
 		 		console.log(data);
                 $('select#customerSelect').html('');

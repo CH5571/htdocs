@@ -91,10 +91,13 @@ Class User extends CI_Controller{
 	}
 
 	public function getCustomerJson(){
-		$address = $this->input->post('address');
+		//TODO Add validation xxs_clean & No results found
+		$address = $this->input->post('q');
 		$data = $this->Table->customerSearch($address);
+
 		echo json_encode($data);
 		die();
+
 	}
 
 	public function addInvoiceController(){
