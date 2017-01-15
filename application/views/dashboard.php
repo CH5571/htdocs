@@ -165,44 +165,64 @@ function getCustomers() {
 					<div class="form-group">
 						<label for="customerInput">Customer</label>
 						<input type="text" name="invoiceCustomer" id="invoiceCustomer" onkeyup="getCustomers();">
-						<select class="form-control" id="customerSelect">
+						<select id="customerSelect">
 							<option> Select </option>
 						</select><br>
 					</div>
 					<div class="form-group">
-						<label for="surnameInput">Surname</label>
-						<input type="text" name="surname" placeholder="Smith"><br>
+						<label for="hoursWorkedInput">Hours Worked</label>
+						<input type="number" name="hoursWorked" placeholder="5"><br>
 					</div>
 					<div class="form-group">
-						<label for="addressLine1Input">Address Line 1</label>
-						<input type="text" name="addressLine1" placeholder="10 Example Road"><br>
+						<label for="jobDescriptionInput">Job Description</label>
+						<input type="text" name="jobDescription" placeholder="Optional"><br>
 					</div>
 					<div class="form-group">
-						<label for="addressLine2Input">Address Line 2</label>
-						<input type="text" name="addressLine2" placeholder="Optional"><br>
+						<label for="dateCompletedInput">Date Completed</label>
+						<input type="date" name="dateCompleted"><br>
 					</div>
 					<div class="form-group">
-						<label for="addressLine3Input">Address Line 3</label>
-						<input type="text" name="addressLine3" placeholder="Optional"><br>
+						<div class="radio">
+						  <label>
+						    <input type="radio" name="paidOptions" id="paidRadio" value="1">
+						    Paid
+						  </label>
+						</div>
+						<div class="radio">
+						  <label>
+						    <input type="radio" name="paidOptions" id="unpaidRadio" value="2" checked>
+						    Unpaid
+						  </label>
+						</div>
 					</div>
 					<div class="form-group">
-						<label for="cityInput">City</label>
-						<input type="text" name="city" placeholder="Ipswich"><br>
+						<label for="materialInput">Material</label>
+						<input type="text" name="materialInput" id="materialInput" onkeyup="getMaterials();">
 					</div>
 					<div class="form-group">
-						<label for="postcodeInput">Postcode</label>
-						<input type="text" name="postcode" placeholder="IP11 0ST"><br>
-					</div>
-					<div class="form-group">
-						<label for="telephoneNumberInput">Telephone Number</label>
-						<input type="text" name="telephoneNumber" placeholder="07950881070"><br>
-					</div>
-					<div class="form-group">
-						<label for="emailInput">Email</label>
-						<input type="text" name="email" placeholder="example@example.com"><br>
+						<table class="table table-striped table-bordered">
+						<!--
+						TODO Add materials search ajax and add to array. Search result dropdown in td.
+						-->
+							<thead>
+								<tr>
+									<td>Material</td>
+									<td>Qty</td>
+									<td>Price</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr><!--  Add confirmed rows below -->
+									<td><select id="materialSelect" class="form-control">
+											<option> Select </option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-primary mdl">Add Customer</button>
+						<button type="submit" class="btn btn-primary mdl">Add Invoice</button>
 					</div>
 				</form>
 			</div>
