@@ -35,6 +35,27 @@ function getCustomers() {
 	});
 }
 
+function addMaterialTbl() {
+
+}
+
+function getMaterials() {
+	$.ajax({
+		url: "http://[::1]/htdocs/index.php/User/getMaterialJson",
+		type: "POST",
+		dataType: "json",
+		data: { 'q' : $("#materialInput").val() },
+		 success: function(data) {
+		 		console.log(data);
+                $('select#materialSelect').html('');
+                for(var i=0;i<data.length;i++)
+                {
+                    $("<option />").val(data[i].materialsID).text(data[i].materialName).appendTo($('select#materialSelect'));
+                }
+              }
+	});
+}
+
 
 </script>
 
@@ -216,6 +237,15 @@ function getCustomers() {
 									<td><select id="materialSelect" class="form-control">
 											<option> Select </option>
 										</select>
+									</td>
+									<td>
+										<input type="number" name="materialQty" id="materialQty" placeholder="5">
+									</td>
+									<td>
+										<input type="disabled" name="materialPrice" id="materialPrice">
+									</td>
+									<td>
+										<button type="submit" class="btn btn-primary mdl" id="addMaterialRow" onclick="addMaterialTbl();">Add Material</button>
 									</td>
 								</tr>
 							</tbody>

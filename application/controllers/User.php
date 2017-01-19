@@ -97,7 +97,15 @@ Class User extends CI_Controller{
 
 		echo json_encode($data);
 		die();
+	}
 
+	public function getMaterialJson(){
+		//TODO Add validation
+		$name = $this->input->post('q');
+		$data = $this->Table->materialSearch($name);
+
+		echo json_encode($data);
+		die();
 	}
 
 	public function addInvoiceController(){
