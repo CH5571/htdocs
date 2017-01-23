@@ -36,7 +36,16 @@ function getCustomers() {
 }
 
 function addMaterialTbl() {
+	var selectedName = $('#materialSelect').text();
+	var selectedID = $('#materials').val();
+	var selectedQty = $('#materialQty').val();
+	var i = 1;
 
+
+	//Tests
+	console.log($('#materialSelect').val());
+	console.log($('#materialSelect').text());
+	console.log($('#materialQty').val());
 }
 
 function getMaterials() {
@@ -245,7 +254,7 @@ function getMaterials() {
 										<input type="disabled" name="materialPrice" id="materialPrice">
 									</td>
 									<td>
-										<button type="submit" class="btn btn-primary mdl" id="addMaterialRow" onclick="addMaterialTbl();">Add Material</button>
+										<button type="button" class="btn btn-primary mdl" id="addMaterialRow" onclick="addMaterialTbl();">Add Material</button>
 									</td>
 								</tr>
 							</tbody>
