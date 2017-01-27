@@ -79,5 +79,14 @@ Class Table extends CI_Model {
 		return $query->result();
 	}
 
+	public function materialPriceSearch($materialID){
+		$this->db->select('price');
+		$this->db->from('materials');
+		$this->db->where('materialsID', $materialID);
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
 }
 ?>

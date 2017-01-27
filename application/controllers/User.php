@@ -108,6 +108,15 @@ Class User extends CI_Controller{
 		die();
 	}
 
+	public function getMaterialPriceJson(){
+		//TODO Add validation
+		$materialID = $this->input->post('q');
+		$data = $this->Table->materialPriceSearch($materialID);
+
+		echo json_encode($data);
+		die();
+	}
+
 	public function addInvoiceController(){
 		if (!$this->ion_auth->logged_in()) {
 			redirect('User/index');

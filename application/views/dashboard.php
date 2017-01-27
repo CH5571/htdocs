@@ -36,17 +36,49 @@ function getCustomers() {
 }
 
 function addMaterialTbl() {
-	var selectedName = $('#materialSelect').text();
-	var selectedID = $('#materials').val();
+	var selectedName = $('#materialSelect option:selected').text();
+	var selectedID = $('#materialSelect option:selected').val();
 	var selectedQty = $('#materialQty').val();
-	var i = 1;
+	var materialArray = {materialID:selectedID, materialName:selectedName, quantity:selectedQty}; //Add price
 
+	$.ajax({
+		url: "http://[::1]/htdocs/index.php/User/getMaterialPriceJson",
+		type: "POST",
+		dataType: "json",
+		data: { 'q' : selectedID },
+		 success: function(data) {
+		 		console.log("Data: "+data);  
+		 		var selectedPrice = data[0].price;
+		 		var totalCost = selectedPrice * selectedQty;
+                $('#materialTable > tbody:last-child').last().append('<tr class="materialRow"><td>'+selectedName+'</td><td>'+selectedQty+'</td><td>'+totalCost+'</td></tr>');
+              }
+	});
 
-	//Tests
-	console.log($('#materialSelect').val());
-	console.log($('#materialSelect').text());
+	//Tests vars output to console 
+	console.log(selectedName);
+	console.log(selectedID);
 	console.log($('#materialQty').val());
+	console.log(materialArray);
+	//console.log("Price: " + $('#materialUnitPrice').val());
+	//console.log("Total Cost: " + totalCost);
+
+
 }
+
+/*
+* When materialSelected is changed, the new price is added to table. 
+* Currently not working 
+
+$('#materialSelect')
+	.change(function() {
+		var selectedID = $('#materialSelect option:selected').val();
+		$( "materialSelect option:selected" ).each(function() {
+			selectedID = $('#materialSelect option:selected').val();
+		});
+		$('#materialUnitPrice').text(selectedID);
+	})
+	.change();
+*/
 
 function getMaterials() {
 	$.ajax({
@@ -60,6 +92,10 @@ function getMaterials() {
                 for(var i=0;i<data.length;i++)
                 {
                     $("<option />").val(data[i].materialsID).text(data[i].materialName).appendTo($('select#materialSelect'));
+                }
+
+                if (data.length > 0) {
+                	$('#materialUnitPrice').val(data[0].price);
                 }
               }
 	});
@@ -230,7 +266,7 @@ function getMaterials() {
 						<input type="text" name="materialInput" id="materialInput" onkeyup="getMaterials();">
 					</div>
 					<div class="form-group">
-						<table class="table table-striped table-bordered">
+						<table class="table table-striped table-bordered" id="materialTable">
 						<!--
 						TODO Add materials search ajax and add to array. Search result dropdown in td.
 						-->
@@ -251,7 +287,7 @@ function getMaterials() {
 										<input type="number" name="materialQty" id="materialQty" placeholder="5">
 									</td>
 									<td>
-										<input type="disabled" name="materialPrice" id="materialPrice">
+										<input type="disabled" name="materialPrice" id="materialUnitPrice" readonly>
 									</td>
 									<td>
 										<button type="button" class="btn btn-primary mdl" id="addMaterialRow" onclick="addMaterialTbl();">Add Material</button>
