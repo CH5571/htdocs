@@ -117,13 +117,57 @@ Class User extends CI_Controller{
 		die();
 	}
 
+	/**
+	* Function to get data from invoice form, check it is valid and send to model.
+	*/
 	public function addInvoiceController(){
 		if (!$this->ion_auth->logged_in()) {
 			redirect('User/index');
 		} else {
-			$mdata['material'] = $this->Table->getMaterials();
-			$cdata['customer'] = $this->Table->getCustomers();
-			$this->load->view('addInvoiceController', $mdata, $cdata);
+			$invoiceTotalCost = NULL;
+
+			//Data for JobMaterials Table
+			$materialID = $this->input->post('materialIdData');
+			$materialQty = $this->input->post('materialQtyData');
+			$materialTotalPrice = $this->input->post('materialTotalPrice');
+
+			//Get next id of invoices assign it to $nextID
+			$nextID = $this->Table->getNextInvoiceId();
+
+			//Assign values from material table to array
+			//TODO Add for for total cost and move below to between the two inserts.
+			for ($i=0; $i < sizeof($materialID); $i++) { 
+				$jobMaterialData[$i] = array(
+					'invoiceID' => $nextID,
+					'materialsID' => $materialID[$i],
+					'quantity' => $materialQty[$i],
+					'totalCost' => $materialTotalPrice[$i]
+				);
+				$invoiceTotalCost += $materialTotalPrice[$i];
+			}
+
+			//Invoice Data
+			$customerID = $this->input->post('customerSelect');
+			$hoursWorked = $this->input->post('hoursWorked');
+			$jobDescription = $this->input->post('jobDescription');
+			$dateCompleted = $this->input->post('dateCompleted');
+			$paid = $this->input->post('paidOptions');
+			$dateCreated = date("d-m-Y");
+
+			$invoiceData = array(
+				'hoursWorked' => $hoursWorked,
+				'jobDescription' => $jobDescription,
+				'totalCost' => $invoiceTotalCost,
+				'dateCompleted' => $dateCompleted,
+				'paid' => $paid,
+				'customersID' => $customerID,
+				'invoiceCreated' => $dateCreated
+			);
+
+			//Insert Invoice to db
+			$this->Table->addInvoice($invoiceData);
+			//Insert $jobMaterials array to db
+			$this->Table->addJobMaterials($jobMaterialData);
 		}
 	}
 

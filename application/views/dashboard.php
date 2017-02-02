@@ -16,6 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <script type="text/javascript">
 
+
 function getCustomers() {
 	console.log($('#invoiceCustomer').val());
 
@@ -50,7 +51,7 @@ function addMaterialTbl() {
 		 		console.log("Data: "+data);  
 		 		var selectedPrice = data[0].price;
 		 		var totalCost = selectedPrice * selectedQty;
-                $('#materialTable > tbody:last-child').last().append('<tr class="materialRow"><td>'+selectedName+'</td><td>'+selectedQty+'</td><td>'+totalCost+'</td></tr>');
+                $('#materialTable > tbody:last-child').last().append('<tr class="materialRow"><td>'+selectedName+'</td><td class="materialQtyData">'+selectedQty+'</td><td>'+totalCost+'</td><input type="hidden" name="materialQtyData" value="'+selectedQty+'"/><input type="hidden" name="materialTotalPrice" value="'+totalCost+'"/><input type="hidden" name="materialIdData" value="'+selectedID+'"/></tr>');
               }
 	});
 
@@ -64,6 +65,7 @@ function addMaterialTbl() {
 
 
 }
+
 
 /*
 * When materialSelected is changed, the new price is added to table. 
@@ -227,11 +229,11 @@ function getMaterials() {
 				<h4 class="modal-title">Add Invoice</h4>
 			</div>
 			<div class="modal-body">
-				<?php echo form_open('User/addInvoice'); ?>
+				<?php echo form_open('User/addInvoiceController'); ?>
 					<div class="form-group">
 						<label for="customerInput">Customer</label>
 						<input type="text" name="invoiceCustomer" id="invoiceCustomer" onkeyup="getCustomers();">
-						<select id="customerSelect">
+						<select id="customerSelect" name="customerSelect">
 							<option> Select </option>
 						</select><br>
 					</div>

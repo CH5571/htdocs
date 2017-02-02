@@ -88,5 +88,30 @@ Class Table extends CI_Model {
 		return $query->result();
 	}
 
+	/*
+	* Get next invoice id and return it as an int
+	*/
+	public function getNextInvoiceId(){
+		$query = $this->db->query("SELECT invoiceID FROM invoices ORDER BY invoiceID DESC LIMIT 1");
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+			$row = $result[0];
+			$currentID = $row->invoiceID;
+		} else {
+			$currentID = 1;
+		}
+
+		return $currentID;
+		
+	}
+
+	public function addInvoice($invoiceData){
+		$this->db->insert('invoices', $invoiceData);
+	}
+
+	public function addJobMaterials($jobMaterialsData){
+		$this->db->insert_batch('jobmaterials', $jobMaterialsData);
+	}
+
 }
 ?>
