@@ -38,7 +38,7 @@ Class Table extends CI_Model {
 	}
 
 	public function getInvoices(){
-		$this->db->select('hoursWorked, totalCost, dateCompleted, addressLine1, paid');
+		$this->db->select('hoursWorked, totalCost, totalPrice, dateCompleted, addressLine1, paid');
 		$this->db->from('invoices');
 		$this->db->join('customers', 'customers.customerID = invoices.customersID');
 		$query = $this->db->get();

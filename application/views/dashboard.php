@@ -242,6 +242,10 @@ function getMaterials() {
 						<input type="number" name="hoursWorked" placeholder="5"><br>
 					</div>
 					<div class="form-group">
+						<label for="totalPriceInput">Total Price</label>
+						<input type="number" step="0.01" name="totalPrice" placeholder="100.00"><br>
+					</div>
+					<div class="form-group">
 						<label for="jobDescriptionInput">Job Description</label>
 						<input type="text" name="jobDescription" placeholder="Optional"><br>
 					</div>
@@ -289,7 +293,7 @@ function getMaterials() {
 										<input type="number" name="materialQty" id="materialQty" placeholder="5">
 									</td>
 									<td>
-										<input type="disabled" name="materialPrice" id="materialUnitPrice" readonly>
+										<input type="disabled" name="materialPrice" step="0.01" id="materialUnitPrice" readonly>
 									</td>
 									<td>
 										<button type="button" class="btn btn-primary mdl" id="addMaterialRow" onclick="addMaterialTbl();">Add Material</button>

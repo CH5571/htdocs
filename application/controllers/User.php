@@ -141,6 +141,7 @@ Class User extends CI_Controller{
 			//Invoice Data
 			$customerID = $this->input->post('customerSelect');
 			$hoursWorked = $this->input->post('hoursWorked');
+			$totalPrice = $this->input->post('totalPrice');
 			$jobDescription = $this->input->post('jobDescription');
 			$dateCompleted = $this->input->post('dateCompleted');
 			$paid = $this->input->post('paidOptions');
@@ -150,6 +151,7 @@ Class User extends CI_Controller{
 				'hoursWorked' => $hoursWorked,
 				'jobDescription' => $jobDescription,
 				'totalCost' => $invoiceTotalCost,
+				'totalPrice' => $totalPrice,
 				'dateCompleted' => $dateCompleted,
 				'paid' => $paid,
 				'customersID' => $customerID,

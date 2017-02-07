@@ -144,6 +144,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<tr>
 					<td><strong>Hours Worked</strong></td>
 					<td><strong>Total Cost</strong></td>
+					<td><strong>Total Price</strong></td>
 					<td><strong>Date Completed</strong></td>
 					<td><strong>Address Line 1</strong></td>
 					<td><strong>Paid</strong></td>
@@ -155,6 +156,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<tr>
 						<td><?php echo $invoices->hoursWorked; ?></td>
 						<td><?php echo '£'.$invoices->totalCost; ?></td>
+						<td><?php echo '£'.$invoices->totalPrice; ?></td>
 						<td><?php echo $invoices->dateCompleted; ?></td>
 						<td><?php echo $invoices->addressLine1; ?></td>
 						<td><?php echo $invoices->paid; ?></td>
