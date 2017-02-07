@@ -130,7 +130,7 @@ function getMaterials() {
 			<li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoice <span class="caret"></span></a>
 	          <ul class="dropdown-menu">
-	            <li><a href="#">Manage Invoices</a></li>
+	            <li><a href="http://[::1]/htdocs/index.php/User/invoicePage">Manage Invoices</a></li>
 	            <li><a href="#" data-toggle="modal" data-target="#addInvoice">Quick Add</a></li>
 	          </ul>
 	        </li>

@@ -119,6 +119,7 @@ Class User extends CI_Controller{
 
 	/**
 	* Function to get data from invoice form, check it is valid and send to model.
+	* TODO Fix totalCost, dateCreated and add labour costs to totalCost CHANGE SIZE OF IT DOESNT ITERATE PROPERLY
 	*/
 	public function addInvoiceController(){
 		if (!$this->ion_auth->logged_in()) {
@@ -131,18 +132,9 @@ Class User extends CI_Controller{
 			$materialQty = $this->input->post('materialQtyData');
 			$materialTotalPrice = $this->input->post('materialTotalPrice');
 
-			//Get next id of invoices assign it to $nextID
-			$nextID = $this->Table->getNextInvoiceId();
-
 			//Assign values from material table to array
 			//TODO Add for for total cost and move below to between the two inserts.
 			for ($i=0; $i < sizeof($materialID); $i++) { 
-				$jobMaterialData[$i] = array(
-					'invoiceID' => $nextID,
-					'materialsID' => $materialID[$i],
-					'quantity' => $materialQty[$i],
-					'totalCost' => $materialTotalPrice[$i]
-				);
 				$invoiceTotalCost += $materialTotalPrice[$i];
 			}
 
@@ -166,8 +158,23 @@ Class User extends CI_Controller{
 
 			//Insert Invoice to db
 			$this->Table->addInvoice($invoiceData);
-			//Insert $jobMaterials array to db
-			$this->Table->addJobMaterials($jobMaterialData);
+
+			//Get next id of invoices assign it to $nextID
+			$nextID = $this->Table->getNextInvoiceId();
+
+			for ($i=0; $i < sizeof($materialID); $i++) { 
+				$jobMaterialData[$i] = array(
+					'invoiceID' => $nextID,
+					'materialsID' => $materialID[$i],
+					'quantity' => $materialQty[$i],
+					'totalCost' => $materialTotalPrice[$i]
+				);
+				//Insert $jobMaterials array to db
+				$this->Table->addJobMaterials($jobMaterialData);
+			}
+
+			//Redirect to invoicePage 
+			redirect('User/invoicePage');
 		}
 	}
 

@@ -142,16 +142,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<table class="table table-striped table-bordered">
 			<thead>
 				<tr>
-					<td><strong> </strong></td>
-					<td><strong>Price</strong></td>
+					<td><strong>Hours Worked</strong></td>
+					<td><strong>Total Cost</strong></td>
+					<td><strong>Date Completed</strong></td>
+					<td><strong>Address Line 1</strong></td>
+					<td><strong>Paid</strong></td>
 				</tr>
 			</thead>
 			<tbody>
 				<?php 
 				foreach ($invoice as $invoices) { ?>
 					<tr>
-						<td><?php echo $invioces->; ?></td>
-						<td><?php echo '£'.$invoices->; ?></td>
+						<td><?php echo $invoices->hoursWorked; ?></td>
+						<td><?php echo '£'.$invoices->totalCost; ?></td>
+						<td><?php echo $invoices->dateCompleted; ?></td>
+						<td><?php echo $invoices->addressLine1; ?></td>
+						<td><?php echo $invoices->paid; ?></td>
 					</tr>
 				<?php } ?>
 			</tbody>

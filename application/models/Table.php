@@ -37,6 +37,15 @@ Class Table extends CI_Model {
 
 	}
 
+	public function getInvoices(){
+		$this->db->select('hoursWorked, totalCost, dateCompleted, addressLine1, paid');
+		$this->db->from('invoices');
+		$this->db->join('customers', 'customers.customerID = invoices.customersID');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
 	public function getUsers(){
 		$this->db->select('username, email, created_on');
 		$this->db->from('users');
@@ -92,16 +101,13 @@ Class Table extends CI_Model {
 	* Get next invoice id and return it as an int
 	*/
 	public function getNextInvoiceId(){
-		$query = $this->db->query("SELECT invoiceID FROM invoices ORDER BY invoiceID DESC LIMIT 1");
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-			$row = $result[0];
-			$currentID = $row->invoiceID;
-		} else {
-			$currentID = 1;
-		}
+		//$query = $this->db->query("SELECT invoiceID FROM invoices ORDER BY invoiceID DESC LIMIT 1");
+		$this->db->select('invoiceID');
+		$this->db->from('invoices');
+		$this->db->order_by("invoiceID", "desc");
+		$this->db->limit(1);
 
-		return $currentID;
+		return $this->db->get()->row()->invoiceID;
 		
 	}
 
