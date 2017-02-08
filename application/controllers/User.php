@@ -10,6 +10,8 @@ Class User extends CI_Controller{
 		$this->load->helper('form');
 		$this->load->helper('url');
 		$this->load->model('Table');
+		$this->load->library('pdf');
+		define('FPDF_FONTPATH', '\xampp\htdocs\htdocs\font');
 		//TODO Fix
 		
 		/*if (!$this->ion_auth->logged_in()) {
@@ -315,6 +317,18 @@ Class User extends CI_Controller{
 
 			echo '<script>alert("Material successfully added!");</script>';
 		}
+	}
+
+	/*
+	* function to create pdf file of invoice
+	* TODO invLink value ID & edit & delete val id or hidden input
+	*/
+	public function createPdf(/*$currentID*/){
+		$pdf = new Pdf();
+    	$pdf->AddPage();
+    	$pdf->SetFont('Arial','B',16);
+   		$pdf->Cell(40,10,'Hello World!');
+    	$pdf->Output();
 	}
 
 	public function logout(){
