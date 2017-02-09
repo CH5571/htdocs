@@ -177,8 +177,12 @@ Class User extends CI_Controller{
 				$this->Table->addJobMaterials($jobMaterialData);
 			}
 
+			$this->session->set_flashdata('nextID', $nextID);
+			$this->session->set_flashdata('customerID', $customerID);
+			$this->session->set_flashdata('totalCost', $invoicetotalCost);
+
 			//Redirect to invoicePage 
-			redirect('User/invoicePage');
+			redirect('User/createPdf');
 		}
 	}
 
@@ -323,11 +327,65 @@ Class User extends CI_Controller{
 	* function to create pdf file of invoice
 	* TODO invLink value ID & edit & delete val id or hidden input
 	*/
-	public function createPdf(/*$currentID*/){
+	public function createPdf(){
 		$pdf = new Pdf();
     	$pdf->AddPage();
-    	$pdf->SetFont('Arial','B',16);
-   		$pdf->Cell(40,10,'Hello World!');
+    	$pdf->SetFont('Arial','B',12);
+    	//Remove bold
+    	$pdf->SetFont('');
+
+    	$date = date("Y/m/d");
+
+    	$nextID = $this->session->flashdata('nextID');
+    	$customerID = $this->session->flashdata('customerID');
+    	$totalCost = $this->session->flashdata('totalCost');
+
+    	//Get Customer info
+    	$cdata = $this->Table->customerSearchID($customerID);
+
+    	$pdf->Cell(40,10,'Date: '.$date,0,1);
+	   	$pdf->Cell(40,10,'Invoice ID: MJH'.$nextID,0,1);
+	   	$pdf->Cell(40,10,'Send to: ');
+    	
+    	//Main Body
+    	foreach ($cdata as $res) {
+	   		$pdf->Cell(112.5,10,$res->forename.' '.$res->surname,0,2,'C');
+	   		$pdf->Cell(112.5,10,$res->addressLine1,0,2,'C');
+	   		if ($res->addressLine2 != NULL) {
+	   			$pdf->Cell(112.5,10,$res->addressLine2,0,2,'C');
+	   		}
+
+	   		if ($res->addressLine3 != NULL) {
+	   			$pdf->Cell(112.5,10,$res->addressLine3,0,2,'C');
+	   		}
+
+	   		$pdf->Cell(112.5,10,$res->city,0,2,'C');
+	   		$pdf->Cell(112.5,10,$res->postcode,0,2,'C');
+	   		$pdf->Cell(112.5,10,$res->telephoneNumber,0,2,'C');
+
+	   		if ($res->email != NULL) {
+	   			$pdf->Cell(112.5,10,$res->email,0,1,'C');
+	   		}
+    	}
+   		
+
+   		$pdf->Ln(15);
+
+   		$header = array('Item Name', 'Qty', 'Cost', 'Hours Worked', 'Total');
+   		$mdata = $this->Table->jMaterialSearchID($nextID);
+
+   		foreach($header as $col)
+	        $pdf->Cell(40,7,$col,1);
+	    $pdf->Ln();
+
+	    foreach($mdata as $row)
+	    {
+	        foreach($row as $col)
+	            $pdf->Cell(40,6,$col,1);
+	        $pdf->Ln();
+	    }
+
+   		//Output as pdf and save to /pdf folder
     	$pdf->Output();
 	}
 

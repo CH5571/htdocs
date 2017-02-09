@@ -71,6 +71,31 @@ Class Table extends CI_Model {
 		return $query->result();
 	}
 
+	public function customerSearchID($search){
+		$this->db->select('*');
+		$this->db->from('customers');
+		$this->db->where('customerID', $search);
+		$query = $this->db->get();
+
+		/*foreach ($query->result() as $row){
+            $cdata = [
+                'forename' => $row->forename,
+                'surname' => $row->surname,
+                'addressLine1' => $row->addressLine1,
+                'addressLine2' => $row->addressLine2,
+                'addressLine3' => $row->addressLine3,
+                'city' => $row->city,
+                'postcode' => $row->postcode,
+                'telephoneNumber' => $row->telephoneNumber,
+                'email' => $row->email
+            ];
+
+        }
+        */
+
+		return $query->result();
+	}
+
 	public function getMaterials(){
 		$this->db->select('*');
 		$this->db->from('materials');
@@ -92,6 +117,17 @@ Class Table extends CI_Model {
 		$this->db->select('price');
 		$this->db->from('materials');
 		$this->db->where('materialsID', $materialID);
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
+	public function jMaterialSearchID($nextID){
+		$this->db->select('materialName, quantity, jobmaterials.totalCost, hoursWorked');
+		$this->db->from('jobmaterials');
+		$this->db->where('jobmaterials.invoiceID', $nextID);
+		$this->db->join('materials', 'materials.materialsID = jobmaterials.materialsID');
+		$this->db->join('invoices', 'invoices.invoiceID = jobmaterials.invoiceID');
 		$query = $this->db->get();
 
 		return $query->result();
