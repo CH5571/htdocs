@@ -47,7 +47,7 @@ Class Table extends CI_Model {
 	}
 
 	public function getUsers(){
-		$this->db->select('username, email, created_on');
+		$this->db->select('username, email, created_on, id');
 		$this->db->from('users');
 		$query = $this->db->get();
 
@@ -123,7 +123,7 @@ Class Table extends CI_Model {
 	}
 
 	public function jMaterialSearchID($nextID){
-		$this->db->select('materialName, quantity, jobmaterials.totalCost, hoursWorked');
+		$this->db->select('materialName, quantity, jobmaterials.totalCost, hoursWorked, invoices.totalCost');
 		$this->db->from('jobmaterials');
 		$this->db->where('jobmaterials.invoiceID', $nextID);
 		$this->db->join('materials', 'materials.materialsID = jobmaterials.materialsID');

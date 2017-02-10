@@ -42,6 +42,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								<td><?php echo $users->username; ?></td>
 								<td><?php echo $users->email; ?></td>
 								<td><?php echo $users->created_on; ?></td>
+								<td><a class="btn btn-secondary" href="http://[::1]/htdocs/index.php/User/editUser/"<?php echo $users->id ?> role="button">Edit</a></td>
+								<td><a class="btn btn-danger" href="http://[::1]/htdocs/index.php/User/deleteUser/"<?php echo $users->id ?> role="button">Delete</a></td>
 							</tr>
 						<?php } ?>
 					</tbody>

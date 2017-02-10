@@ -118,6 +118,16 @@ Class User extends CI_Controller{
 		echo json_encode($data);
 		die();
 	}
+	/*
+	* Function to edit user 
+	*/
+	public function editUser($userId){
+
+	}
+
+	public function deleteUser($userId){
+		
+	}
 
 	/**
 	* Function to get data from invoice form, check it is valid and send to model.
@@ -127,7 +137,7 @@ Class User extends CI_Controller{
 		if (!$this->ion_auth->logged_in()) {
 			redirect('User/index');
 		} else {
-			$invoiceTotalCost = NULL;
+			$invoiceTotalCost = 0.00;
 
 			//Data for JobMaterials Table
 			$materialID = $this->input->post('materialIdData');
@@ -137,7 +147,7 @@ Class User extends CI_Controller{
 			//Assign values from material table to array
 			//TODO Add for for total cost and move below to between the two inserts.
 			for ($i=0; $i < sizeof($materialID); $i++) { 
-				$invoiceTotalCost += $materialTotalPrice[$i];
+				$invoiceTotalCost = $invoiceTotalCost + $materialTotalPrice[$i];
 			}
 
 			//Invoice Data
@@ -166,12 +176,12 @@ Class User extends CI_Controller{
 			//Get next id of invoices assign it to $nextID
 			$nextID = $this->Table->getNextInvoiceId();
 
-			for ($i=0; $i < sizeof($materialID); $i++) { 
-				$jobMaterialData[$i] = array(
+			for ($j=0;$j<sizeof($materialID); $j++) { 
+				$jobMaterialData[$j] = array(
 					'invoiceID' => $nextID,
-					'materialsID' => $materialID[$i],
-					'quantity' => $materialQty[$i],
-					'totalCost' => $materialTotalPrice[$i]
+					'materialsID' => $materialID[$j],
+					'quantity' => $materialQty[$j],
+					'totalCost' => $materialTotalPrice[$j]
 				);
 				//Insert $jobMaterials array to db
 				$this->Table->addJobMaterials($jobMaterialData);
