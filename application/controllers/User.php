@@ -146,7 +146,7 @@ Class User extends CI_Controller{
 
 			//Assign values from material table to array
 			//TODO Add for for total cost and move below to between the two inserts.
-			for ($i=0; $i < sizeof($materialID); $i++) { 
+			for ($i=0; $i < count($materialID); $i++) { 
 				$invoiceTotalCost = $invoiceTotalCost + $materialTotalPrice[$i];
 			}
 
@@ -176,7 +176,7 @@ Class User extends CI_Controller{
 			//Get next id of invoices assign it to $nextID
 			$nextID = $this->Table->getNextInvoiceId();
 
-			for ($j=0;$j<sizeof($materialID); $j++) { 
+			for ($j=0;$j<count($materialID); $j++) { 
 				$jobMaterialData[$j] = array(
 					'invoiceID' => $nextID,
 					'materialsID' => $materialID[$j],

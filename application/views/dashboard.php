@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
+	<link rel="stylesheet" type="text/css" href="xampp/htdocs/htdocs/assets/css/main.css">
 	<title>Login</title></head>
 <body>
 
@@ -51,7 +51,7 @@ function addMaterialTbl() {
 		 		console.log("Data: "+data);  
 		 		var selectedPrice = data[0].price;
 		 		var totalCost = selectedPrice * selectedQty;
-                $('#materialTable > tbody:last-child').last().append('<tr class="materialRow"><td>'+selectedName+'</td><td class="materialQtyData">'+selectedQty+'</td><td>'+totalCost+'</td><input type="hidden" name="materialQtyData" value="'+selectedQty+'"/><input type="hidden" name="materialTotalPrice" value="'+totalCost+'"/><input type="hidden" name="materialIdData" value="'+selectedID+'"/></tr>');
+                $('#materialTable > tbody:last-child').last().append('<tr class="materialRow"><td>'+selectedName+'</td><td class="materialQtyData">'+selectedQty+'</td><td>'+totalCost+'</td><input type="hidden" name="materialQtyData[]" value="'+selectedQty+'"/><input type="hidden" name="materialTotalPrice[]" value="'+totalCost+'"/><input type="hidden" name="materialIdData[]" value="'+selectedID+'"/></tr>');
               }
 	});
 
@@ -81,6 +81,7 @@ $('#materialSelect')
 	})
 	.change();
 */
+
 
 function getMaterials() {
 	$.ajax({
