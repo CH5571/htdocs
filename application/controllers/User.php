@@ -145,7 +145,6 @@ Class User extends CI_Controller{
 			$materialTotalPrice = $this->input->post('materialTotalPrice');
 
 			//Assign values from material table to array
-			//TODO Add for for total cost and move below to between the two inserts.
 			for ($i=0; $i < count($materialID); $i++) { 
 				$invoiceTotalCost = $invoiceTotalCost + $materialTotalPrice[$i];
 			}
@@ -176,17 +175,21 @@ Class User extends CI_Controller{
 			//Get next id of invoices assign it to $nextID
 			$nextID = $this->Table->getNextInvoiceId();
 
-			for ($j=0;$j<count($materialID); $j++) { 
-				$jobMaterialData[$j] = array(
+			//Declare array to store jobmaterials data to insert to db
+			$jobMaterialData = [];
+
+			for ($j=0; $j < sizeof($materialID); $j++) { 
+				$jobMaterialData[] = array(
 					'invoiceID' => $nextID,
 					'materialsID' => $materialID[$j],
 					'quantity' => $materialQty[$j],
 					'totalCost' => $materialTotalPrice[$j]
-				);
-				//Insert $jobMaterials array to db
-				$this->Table->addJobMaterials($jobMaterialData);
+				);	
 			}
 
+			//Insert $jobMaterials array to db
+			$this->Table->addJobMaterials($jobMaterialData);
+			
 			$this->session->set_flashdata('nextID', $nextID);
 			$this->session->set_flashdata('customerID', $customerID);
 			$this->session->set_flashdata('totalCost', $invoicetotalCost);
@@ -381,7 +384,7 @@ Class User extends CI_Controller{
 
    		$pdf->Ln(15);
 
-   		$header = array('Item Name', 'Qty', 'Cost', 'Hours Worked', 'Total');
+   		$header = array('Item Name', 'Qty', 'Unit Cost', 'Hours Worked', 'Total');
    		$mdata = $this->Table->jMaterialSearchID($nextID);
 
    		foreach($header as $col)

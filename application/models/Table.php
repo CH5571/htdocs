@@ -123,7 +123,7 @@ Class Table extends CI_Model {
 	}
 
 	public function jMaterialSearchID($nextID){
-		$this->db->select('materialName, quantity, jobmaterials.totalCost, hoursWorked, invoices.totalCost');
+		$this->db->select('materialName, quantity, materials.price, hoursWorked, jobmaterials.totalCost');
 		$this->db->from('jobmaterials');
 		$this->db->where('jobmaterials.invoiceID', $nextID);
 		$this->db->join('materials', 'materials.materialsID = jobmaterials.materialsID');
