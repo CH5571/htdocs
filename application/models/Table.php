@@ -38,7 +38,7 @@ Class Table extends CI_Model {
 	}
 
 	public function getInvoices(){
-		$this->db->select('hoursWorked, totalCost, totalPrice, dateCompleted, addressLine1, paid');
+		$this->db->select('hoursWorked, totalCost, totalPrice, dateCompleted, addressLine1, paid, invoiceLink');
 		$this->db->from('invoices');
 		$this->db->join('customers', 'customers.customerID = invoices.customersID');
 		$query = $this->db->get();
@@ -153,6 +153,14 @@ Class Table extends CI_Model {
 
 	public function addJobMaterials($jobMaterialsData){
 		$this->db->insert_batch('jobmaterials', $jobMaterialsData);
+	}
+
+	public function getAddressLine1($customerID){
+		$this->db->select('addressLine1');
+		$this->db->from('customers');
+		$this->db->where('customerID', $customerID);
+
+		return $this->db->get()->row()->addressLine1;
 	}
 
 }

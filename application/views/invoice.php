@@ -159,7 +159,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<td><?php echo '£'.$invoices->totalPrice; ?></td>
 						<td><?php echo $invoices->dateCompleted; ?></td>
 						<td><?php echo $invoices->addressLine1; ?></td>
-						<td><?php echo $invoices->paid; ?></td>
+						<td><?php if($invoices->paid == 1) {
+							echo "Paid";
+						} else {
+							echo "Unpaid";
+						} ?></td>
+						<td><a <?php echo 'href="http://[::1]/htdocs/assets/pdf/'.$invoices->invoiceLink.'"';?> target="_blank">Invoice</a></td>
 					</tr>
 				<?php } ?>
 			</tbody>

@@ -158,6 +158,9 @@ Class User extends CI_Controller{
 			$paid = $this->input->post('paidOptions');
 			$dateCreated = date("d-m-Y");
 
+			$addressLine1 = $this->Table->getAddressLine1($customerID);
+			$filename = 'MJH'.$addressLine1.$dateCreated.'.pdf';
+
 			$invoiceData = array(
 				'hoursWorked' => $hoursWorked,
 				'jobDescription' => $jobDescription,
@@ -165,6 +168,7 @@ Class User extends CI_Controller{
 				'totalPrice' => $totalPrice,
 				'dateCompleted' => $dateCompleted,
 				'paid' => $paid,
+				'invoiceLink' => $filename,
 				'customersID' => $customerID,
 				'invoiceCreated' => $dateCreated
 			);
@@ -189,10 +193,13 @@ Class User extends CI_Controller{
 
 			//Insert $jobMaterials array to db
 			$this->Table->addJobMaterials($jobMaterialData);
-			
+
+			//Send data to createPdf controller
 			$this->session->set_flashdata('nextID', $nextID);
 			$this->session->set_flashdata('customerID', $customerID);
 			$this->session->set_flashdata('totalCost', $invoicetotalCost);
+			$this->session->set_flashdata('filename', $filename);
+
 
 			//Redirect to invoicePage 
 			redirect('User/createPdf');
@@ -352,6 +359,7 @@ Class User extends CI_Controller{
     	$nextID = $this->session->flashdata('nextID');
     	$customerID = $this->session->flashdata('customerID');
     	$totalCost = $this->session->flashdata('totalCost');
+    	$filename = $this->session->flashdata('filename');
 
     	//Get Customer info
     	$cdata = $this->Table->customerSearchID($customerID);
@@ -399,6 +407,7 @@ Class User extends CI_Controller{
 	    }
 
    		//Output as pdf and save to /pdf folder
+    	$pdf->Output('F', 'C:/xampp/htdocs/htdocs/assets/pdf/'.$filename);
     	$pdf->Output();
 	}
 
