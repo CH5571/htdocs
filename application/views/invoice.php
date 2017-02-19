@@ -130,10 +130,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="container">
 	<div class="row">
 		<h1>Welcome to the Invoice page</h1>
-		<?php echo form_open('User/searchMaterial');?>
+		<?php echo form_open('User/searchInvoice');?>
 			<div class="form-inline">
 				<div class="form-group">
-					<input type="text" name="search" placeholder="Item"><br>
+					<input type="text" name="search" placeholder="Address Line 1"><br>
 				</div>
 				<button type="submit" class="btn btn-default inline">Search</button>
 			</div>
@@ -171,7 +171,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</table> 
 		<?php
 		if ($this->session->flashdata('search')) { //Use Font Awesome?>
-			<a href="http://[::1]/htdocs/index.php/User/materialPage">Back</a>
+			<a href="http://[::1]/htdocs/index.php/User/invoicePage">Back</a>
 	    <?php } ?>
 	</div>
 </div>

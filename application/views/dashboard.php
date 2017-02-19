@@ -5,13 +5,59 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="xampp/htdocs/htdocs/assets/css/main.css">
-	<title>Login</title></head>
+	<title>Login</title>
+</head>
 <body>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	//Google charts API
+    google.charts.load('current', {'packages':['bar']});
+    //When loaded run createChart function
+    google.charts.setOnLoadCallback(createChart);
+
+    function createChart(){
+    	$.ajax({
+    		url: "http://[::1]/htdocs/index.php/User/getGraphData",
+    		type: "POST",
+    		dataType: "json",
+    		success: function(data1){
+    			var data = new google.visualization.DataTable();
+    			data.addColumn('string', 'Date');
+                data.addColumn('number', 'Revenue');
+                data.addColumn('number', 'Cost');
+                data.addColumn('number', 'Profit');
+                //var jsonData = $.parseJSON(data1);
+
+	            for (var i = 0; i < data1.length; i++) {
+	            	var profit = data1[i].totalPrice - data1[i].totalCost;
+	            	data.addRow([data1[i].invoiceCreated, parseInt(data1[i].totalPrice), parseInt(data1[i].totalCost), profit]);
+	            }
+
+	            var options = {
+	            	chart: {
+	            		title: 'Proft and Loss'
+	            	},
+	            	width: 950,
+	            	height: 400,
+	            	axes: {
+	            		x: {
+	            			0: {side: 'bottom'}
+	            		}
+	            	}
+	            }
+	            var chart = new google.charts.Bar(document.getElementById('bar_chart'));
+      			chart.draw(data, options);
+    		}
+    	});
+    }
+
+</script>
 
 
 <script type="text/javascript">
@@ -314,11 +360,57 @@ function getMaterials() {
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-4"></div>
-		<div class="col-md-4 text-center">
-				<h1>Welcome to the dashboard</h1>
-		</div>
-		<div class="col-md-4"></div>
+		<h1>Welcome to the dashboard</h1>
+		<div id="bar_chart"></div>
+	</div>
+	<div class="row">
+		<?php echo form_open('User/searchInvoiceDash');?>
+		<div class="form-inline">
+			<div class="form-group">
+				<input type="text" name="search" placeholder="Address Line 1"><br>
+			</div>
+			<button type="submit" class="btn btn-default inline">Search</button>
+		</div>			
+		</form>
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<td><strong>Hours Worked</strong></td>
+					<td><strong>Total Cost</strong></td>
+					<td><strong>Total Price</strong></td>
+					<td><strong>Date Completed</strong></td>
+					<td><strong>Invoice Created</strong></td>
+					<td><strong>Address Line 1</strong></td>
+					<td><strong>Paid</strong></td>
+				</tr>
+			</thead>
+			<tbody>
+				<?php 
+				foreach ($invoice as $invoices) { ?>
+					<tr <?php if (strtotime($invoices->invoiceCreated) < strtotime('-14 day')) { ?>
+						<?php echo 'class="danger"'; ?>
+					<?php } ?>>
+						<td><?php echo $invoices->hoursWorked; ?></td>
+						<td><?php echo '£'.$invoices->totalCost; ?></td>
+						<td><?php echo '£'.$invoices->totalPrice; ?></td>
+						<td><?php echo $invoices->dateCompleted; ?></td>
+						<td><?php echo $invoices->invoiceCreated; ?></td>
+						<td><?php echo $invoices->addressLine1; ?></td>
+						<td><?php if($invoices->paid == 1) {
+							echo "Paid";
+						} else {
+							echo "Unpaid";
+						} ?></td>
+						<td><a <?php echo 'href="http://[::1]/htdocs/assets/pdf/'.$invoices->invoiceLink.'"';?> target="_blank">Invoice</a></td>
+						<td><a class="btn btn-success" <?php echo'href="http://[::1]/htdocs/index.php/User/markAsPaid/'.$invoices->invoiceID . '"' ?> role="button">Paid</a></td>
+					</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+		<?php
+			if ($this->session->flashdata('search')) { //Use Font Awesome?>
+			<a href="http://[::1]/htdocs/index.php/User/dashboard">Back</a>
+		<?php } ?>
 	</div>
 </div>
 

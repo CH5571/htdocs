@@ -37,9 +37,39 @@ Class Table extends CI_Model {
 
 	}
 
+	public function markAsPaid($id){
+		$this->db->set('paid', 1);
+		$this->db->where('invoiceID', $id);
+		$this->db->update('invoices');
+	}
+
 	public function getInvoices(){
 		$this->db->select('hoursWorked, totalCost, totalPrice, dateCompleted, addressLine1, paid, invoiceLink');
 		$this->db->from('invoices');
+		$this->db->join('customers', 'customers.customerID = invoices.customersID');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
+	public function getInvoicesDashboard(){
+		$unpaid = 2;
+
+		$this->db->select('hoursWorked, totalCost, totalPrice, dateCompleted, invoiceCreated, addressLine1, paid, invoiceLink, invoiceID');
+		$this->db->from('invoices');
+		$this->db->where('paid', $unpaid);
+		$this->db->join('customers', 'customers.customerID = invoices.customersID');
+		$this->db->order_by('invoiceCreated', 'ASC');
+		//$this->db->limit(15);
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
+	public function invoiceSearch($search){
+		$this->db->select('hoursWorked, totalCost, totalPrice, dateCompleted, invoiceCreated, addressLine1, paid, invoiceLink, invoiceID');
+		$this->db->from('invoices');
+		$this->db->like('addressLine1', $search);
 		$this->db->join('customers', 'customers.customerID = invoices.customersID');
 		$query = $this->db->get();
 

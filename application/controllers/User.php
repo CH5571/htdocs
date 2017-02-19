@@ -51,7 +51,8 @@ Class User extends CI_Controller{
 		if (!$this->ion_auth->logged_in()) {
 			redirect('User/index');
 		} else {
-			$this->load->view('dashboard');
+			$data['invoice'] = $this->Table->getInvoicesDashboard();
+			$this->load->view('dashboard', $data);
 		}
 	}
 
@@ -125,8 +126,13 @@ Class User extends CI_Controller{
 
 	}
 
-	public function deleteUser($userId){
-		
+	public function deleteUser($id){
+		if (!$this->ion_auth->is_admin() || !$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			$this->ion_auth->delete_user($id);
+			redirect('User/adminPage', 'refresh');
+		}
 	}
 
 	/**
@@ -156,7 +162,8 @@ Class User extends CI_Controller{
 			$jobDescription = $this->input->post('jobDescription');
 			$dateCompleted = $this->input->post('dateCompleted');
 			$paid = $this->input->post('paidOptions');
-			$dateCreated = date("d-m-Y");
+			$dateCreated = date("Y-m-d");
+			$dateCreatedDB = date('Y-m-d', strtotime(str_replace('-', '/', $dateCreated)));
 
 			$addressLine1 = $this->Table->getAddressLine1($customerID);
 			$filename = 'MJH'.$addressLine1.$dateCreated.'.pdf';
@@ -170,7 +177,7 @@ Class User extends CI_Controller{
 				'paid' => $paid,
 				'invoiceLink' => $filename,
 				'customersID' => $customerID,
-				'invoiceCreated' => $dateCreated
+				'invoiceCreated' => $dateCreatedDB
 			);
 
 			//Insert Invoice to db
@@ -206,8 +213,47 @@ Class User extends CI_Controller{
 		}
 	}
 
+	public function markAsPaid($id){
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			$this->Table->markAsPaid($id);
+			redirect('User/dashboard', 'refresh');
+		}
+	}
+
 	public function invoiceCustomerSearch(){
 		//add ajax - until then use dropdown
+	}
+
+	public function searchInvoice(){
+		$this->form_validation->set_rules('search', 'Search', 'required|max_length[100]');
+
+		if (!$this->form_validation->run()) {
+			$error = validation_errors();
+		} else {
+			$search = $this->input->post('search');
+			//get search results from model
+			$data['invoice'] = $this->Table->invoiceSearch($search);
+			$this->session->set_flashdata('search', 'TRUE');
+			$this->load->view('invoice', $data);
+			//TODO ADD MESSAGE IF NO RESULTS PRESENT 
+		}
+	}
+
+	public function searchInvoiceDash(){
+		$this->form_validation->set_rules('search', 'Search', 'required|max_length[100]');
+
+		if (!$this->form_validation->run()) {
+			$error = validation_errors();
+		} else {
+			$search = $this->input->post('search');
+			//get search results from model
+			$data['invoice'] = $this->Table->invoiceSearch($search);
+			$this->session->set_flashdata('search', 'TRUE');
+			$this->load->view('dashboard', $data);
+			//TODO ADD MESSAGE IF NO RESULTS PRESENT 
+		}
 	}
 
 	public function addUser(){
@@ -396,19 +442,34 @@ Class User extends CI_Controller{
    		$mdata = $this->Table->jMaterialSearchID($nextID);
 
    		foreach($header as $col)
-	        $pdf->Cell(40,7,$col,1);
+	        $pdf->Cell(37.5,7,$col,1);
 	    $pdf->Ln();
 
 	    foreach($mdata as $row)
 	    {
 	        foreach($row as $col)
-	            $pdf->Cell(40,6,$col,1);
+	            $pdf->Cell(37.5,6,$col,1);
 	        $pdf->Ln();
 	    }
+	     
+    	$pdf->Cell(37.5, 6, "Total", 1); 
+    	$pdf->Cell(37.5, 6, '£' . $totalCost, 1, 1, 'L');
 
    		//Output as pdf and save to /pdf folder
     	$pdf->Output('F', 'C:/xampp/htdocs/htdocs/assets/pdf/'.$filename);
     	$pdf->Output();
+	}
+
+	/*
+	* Controller to pass data for graph
+	*
+	*/
+	public function getGraphData(){
+		$this->load->model('Visualisation');
+		$data = $this->Visualisation->getData();
+
+		//Print data JSON encoded for AJAX 
+		echo json_encode($data);
 	}
 
 	public function logout(){
