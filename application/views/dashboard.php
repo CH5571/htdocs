@@ -32,12 +32,96 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 data.addColumn('number', 'Revenue');
                 data.addColumn('number', 'Cost');
                 data.addColumn('number', 'Profit');
-                //var jsonData = $.parseJSON(data1);
+                
+                var graphData = [
+			        { "month": "January", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "February", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "March", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "April", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "May", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "June", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "July", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "August", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "September", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "October", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "November", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
+			        { "month": "December", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 }
+			    ];
+
+			    console.log(JSON.stringify(graphData[0].totalProfit));
 
 	            for (var i = 0; i < data1.length; i++) {
 	            	var profit = data1[i].totalPrice - data1[i].totalCost;
-	            	data.addRow([data1[i].invoiceCreated, parseInt(data1[i].totalPrice), parseInt(data1[i].totalCost), profit]);
+	            	var date = data1[i].invoiceCreated;
+	            	var month = date.substring(5, 7);
+	            	console.log(month);
+	            	
+	            	switch (month) {
+					    case "01":
+					        graphData[0].totalPrice += data1[i].totalPrice;
+					        graphData[0].totalCost += data1[i].totalCost;
+					        graphData[0].totalProfit += profit;
+					        break;
+					    case "02":
+					        graphData[1].totalPrice += data1[i].totalPrice;
+					        graphData[1].totalCost += data1[i].totalCost;
+					        graphData[1].totalProfit += profit;
+					        break;
+					    case "03":
+					        graphData[2].totalPrice += data1[i].totalPrice;
+					        graphData[2].totalCost += data1[i].totalCost;
+					        graphData[2].totalProfit += profit;
+					        break;
+					    case "04":
+					        graphData[3].totalPrice += data1[i].totalPrice;
+					        graphData[3].totalCost += data1[i].totalCost;
+					        graphData[3].totalProfit += profit;
+					        break;
+					    case "05":
+					        graphData[4].totalPrice += data1[i].totalPrice;
+					        graphData[4].totalCost += data1[i].totalCost;
+					        graphData[4].totalProfit += profit;
+					        break;
+					    case "06":
+					        graphData[5].totalPrice += data1[i].totalPrice;
+					        graphData[5].totalCost += data1[i].totalCost;
+					        graphData[5].totalProfit += profit;
+					        break;
+					    case "07":
+					        graphData[6].totalPrice += data1[i].totalPrice;
+					        graphData[6].totalCost += data1[i].totalCost;
+					        graphData[6].totalProfit += profit;
+					        break;
+					    case "08":
+					        graphData[7].totalPrice += data1[i].totalPrice;
+					        graphData[7].totalCost += data1[i].totalCost;
+					        graphData[7].totalProfit += profit;
+					        break;
+					    case "09":
+					        graphData[8].totalPrice += data1[i].totalPrice;
+					        graphData[8].totalCost += data1[i].totalCost;
+					        graphData[8].totalProfit += profit;
+					        break;
+					    case "10":
+					        graphData[9].totalPrice += data1[i].totalPrice;
+					        graphData[9].totalCost += data1[i].totalCost;
+					        graphData[9].totalProfit += profit;
+					        break;
+					    case "11":
+					        graphData[10].totalPrice += data1[i].totalPrice;
+					        graphData[10].totalCost += data1[i].totalCost;
+					        graphData[10].totalProfit += profit;
+					        break;
+					    default:
+					        graphData[11].totalPrice += data1[i].totalPrice;
+					        graphData[11].totalCost += data1[i].totalCost;
+					        graphData[11].totalProfit += profit;
+					} 	
 	            }
+				
+	            for(var j = 0; j < graphData.length; j++){
+					data.addRow([graphData[j].month, parseInt(graphData[j].totalPrice), parseInt(graphData[j].totalCost), parseInt(graphData[j].totalProfit)]);
+				}
 
 	            var options = {
 	            	chart: {
