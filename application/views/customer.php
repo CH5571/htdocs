@@ -12,6 +12,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
+<script type="text/javascript">
+	function getCustomersEdit(customerID) {
+	console.log(customerID);
+
+	$.ajax({
+		url: "http://[::1]/htdocs/index.php/User/getCustomerEditJson",
+		type: "POST",
+		dataType: "json",
+		data: { 'q' : customerID },
+		 success: function(data) {
+		 		console.log(data);
+                $("#customerIdJson").val(data[0].customerID);
+                $("#forenameJson").val(data[0].forename);
+                $("#surnameJson").val(data[0].surname);
+                $("#addressLine1Json").val(data[0].addressLine1);
+                $("#addressLine2Json").val(data[0].addressLine2);
+                $("#addressLine3Json").val(data[0].addressLine3);
+                $("#cityJson").val(data[0].city);
+                $("#postcodeJson").val(data[0].postcode);
+                $("#telephoneNumberJson").val(data[0].telephoneNumber);
+                $("#emailJson").val(data[0].email);
+              }
+	});
+}
+</script>
+
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -127,6 +153,61 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div>	
 </div>
 
+<div class="modal fade" id="editCustomer" tabindex="-1" role="dialog" aria-labelledby="editCustomer" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Edit Customer</h4>
+			</div>
+			<div class="modal-body">
+				<?php echo form_open('User/editCustomer');?>
+					<input type="hidden" name="customerIdJson" id="customerIdJson">					
+					<div class="form-group">
+						<label for="forenameInput">Forename</label>
+						<input type="text" name="forenameJson" placeholder="John" id="forenameJson"><br>
+					</div>
+					<div class="form-group">
+						<label for="surnameInput">Surname</label>
+						<input type="text" name="surnameJson" placeholder="Smith" id="surnameJson"><br>
+					</div>
+					<div class="form-group">
+						<label for="addressLine1Input">Address Line 1</label>
+						<input type="text" name="addressLine1Json" placeholder="10 Example Road" id="addressLine1Json"><br>
+					</div>
+					<div class="form-group">
+						<label for="addressLine2Input">Address Line 2</label>
+						<input type="text" name="addressLine2Json" placeholder="Optional" id="addressLine2Json"><br>
+					</div>
+					<div class="form-group">
+						<label for="addressLine3Input">Address Line 3</label>
+						<input type="text" name="addressLine3Json" placeholder="Optional" id="addressLine3Json"><br>
+					</div>
+					<div class="form-group">
+						<label for="cityInput">City</label>
+						<input type="text" name="cityJson" placeholder="Ipswich" id="cityJson"><br>
+					</div>
+					<div class="form-group">
+						<label for="postcodeInput">Postcode</label>
+						<input type="text" name="postcodeJson" placeholder="IP11 0ST" id="postcodeJson"><br>
+					</div>
+					<div class="form-group">
+						<label for="telephoneNumberInput">Telephone Number</label>
+						<input type="text" name="telephoneNumberJson" placeholder="07950881070" id="telephoneNumberJson"><br>
+					</div>
+					<div class="form-group">
+						<label for="emailInput">Email</label>
+						<input type="text" name="emailJson" placeholder="example@example.com" id="emailJson"><br>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary mdl">Edit Customer</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="container">
 	<div class="row">
 				<h1>Welcome to the customer page</h1>
@@ -166,6 +247,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								<td><?php echo $customers->postcode; ?></td>
 								<td><?php echo $customers->telephoneNumber; ?></td>
 								<td><?php echo $customers->email; ?></td>
+								<td><a class="btn btn-secondary" data-toggle="modal" data-target="#editCustomer" <?php echo'id="'.$customers->customerID . '"' ?> role="button" onclick="getCustomersEdit(this.id);">Edit</a></td>
 							</tr>
 						<?php } ?>
 					</tbody>

@@ -102,10 +102,46 @@ Class User extends CI_Controller{
 		die();
 	}
 
+	public function getCustomerEditJson(){
+		//TODO Add validation xxs_clean & No results found
+		$id = $this->input->post('q');
+		$data = $this->Table->customerJsonSearch($id);
+
+		echo json_encode($data);
+		die();
+	}
+
+	public function getInvoiceEditJson(){
+		//TODO Add validation xxs_clean & No results found
+		$id = $this->input->post('q');
+		$data = $this->Table->invoiceEditJsonSearch($id);
+		
+
+		echo json_encode($data);
+		die();
+	}
+
+	public function jobMaterialsEditJson(){
+		$id = $this->input->post('q');
+		$data = $this->Table->getJobmaterials($id);
+
+		echo json_encode($data);
+		die();
+	}
+
 	public function getMaterialJson(){
 		//TODO Add validation
 		$name = $this->input->post('q');
 		$data = $this->Table->materialSearch($name);
+
+		echo json_encode($data);
+		die();
+	}
+
+	public function getMaterialEditJson(){
+		//TODO Add validation
+		$id = $this->input->post('q');
+		$data = $this->Table->getMaterialsJson($id);
 
 		echo json_encode($data);
 		die();
@@ -126,6 +162,54 @@ Class User extends CI_Controller{
 
 	}
 
+	public function editCustomer(){
+		$this->form_validation->set_rules('forenameJson', 'ForenameJson', 'required|max_length[45]');
+		$this->form_validation->set_rules('surnameJson', 'SurnameJson', 'required|max_length[45]');
+		$this->form_validation->set_rules('addressLine1Json', 'AddressLine1Json', 'required|max_length[75]');
+		$this->form_validation->set_rules('addressLine2Json', 'AddressLine2Json', 'max_length[75]');
+		$this->form_validation->set_rules('addressLine3Json', 'AddressLine3Json', 'max_length[75]');
+		$this->form_validation->set_rules('cityJson', 'CityJson', 'required|max_length[45]');
+		$this->form_validation->set_rules('postcodeJson', 'PostcodeJson', 'required|max_length[8]');
+		$this->form_validation->set_rules('telephoneNumberJson', 'TelephoneNumberJson', 'required|max_length[11]');
+		$this->form_validation->set_rules('emailJson', 'EmailJson', 'required|max_length[75]');
+
+		if (!$this->form_validation->run()){
+			$error = validation_errors();
+		} else {
+			$customerID = $this->input->post('customerIdJson');
+			$forename = $this->input->post('forenameJson');
+			$surname = $this->input->post('surnameJson');
+			$addressLine1 = $this->input->post('addressLine1Json');
+			$addressLine2 = $this->input->post('addressLine2Json');
+			$addressLine3 = $this->input->post('addressLine3Json');
+			$city = $this->input->post('cityJson');
+			$postcode = $this->input->post('postcodeJson');
+		    $telephoneNumber = $this->input->post('telephoneNumberJson');
+			$email = $this->input->post('emailJson');
+
+			$data = array(
+				'forename' => $forename,
+				'surname' => $surname,
+				'addressLine1' => $addressLine1,
+				'addressLine2' => $addressLine2,
+				'addressLine3' => $addressLine3,
+				'city' => $city,
+				'postcode' => $postcode,
+				'telephoneNumber' => $telephoneNumber,
+				'email' => $email
+			);
+
+			//get current page
+			//$currentPage = $this->uri->uri_string();
+
+			$this->Table->editCustomer($data, $customerID);
+
+			echo '<script>alert("Customer successfully editted!");</script>';
+			//TODO Add code to determine users page so they are not redirected to an incorrect page
+			redirect('User/customerPage', 'refresh');
+		}
+	}
+
 	public function deleteUser($id){
 		if (!$this->ion_auth->is_admin() || !$this->ion_auth->logged_in()) {
 			redirect('User/index');
@@ -134,6 +218,61 @@ Class User extends CI_Controller{
 			redirect('User/adminPage', 'refresh');
 		}
 	}
+
+	public function editMaterial(){
+		$this->form_validation->set_rules('materialIdJson', 'materialIdJson', 'required');
+		$this->form_validation->set_rules('materialNameJson', 'MaterialNameJson', 'required|max_length[45]');
+		$this->form_validation->set_rules('priceJson', 'PriceJson', 'required');
+
+		if (!$this->form_validation->run()) {
+			$error = validation_errors();
+		} else {
+			
+			$data = array(
+				'materialName' => $this->input->post('materialNameJson'),
+				'price' => $this->input->post('priceJson')
+			);
+
+			$id = $this->input->post('materialIdJson');
+
+			$this->Table->editMaterial($data, $id);
+
+			echo '<script>alert("Material successfully edited!");</script>';
+
+			redirect('User/materialPage', 'refresh');			
+		}
+	}
+
+	public function deleteInvoice($id){
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			$this->Table->deleteInvoice($id);
+			echo '<script>alert("Invoice Deleted");</script>';
+			redirect('User/invoicePage', 'refresh');
+		}
+	}
+
+	/*
+	public function deleteCustomer($id){
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			$this->Table->deleteCustomer($id);
+			redirect('User/customerPage', 'refresh');
+		}
+	}
+
+	public function deleteMaterial($id){
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			$this->Table->deleteMaterial($id);
+			redirect('User/materialPage', 'refresh');
+		}
+	}
+	*/
+	
 
 	/**
 	* Function to get data from invoice form, check it is valid and send to model.

@@ -5,36 +5,41 @@ Class Table extends CI_Model {
 		$this->db->insert('customers', $data);
 	}
 
-	public function editCustomer(){
-
+	public function editCustomer($data, $customerID){
+		$this->db->where('customerID', $customerID);
+		$this->db->update('customers', $data);
 	}
 
-	public function deleteCustomer(){
-
+	/*
+	public function deleteCustomer($id){
+		$this->db->where('customerID', $id);
+		$this->db->delete('customers');
 	}
+	*/
 
 	public function addMaterial($data){
 		$this->db->insert('materials', $data);
 	}
 
-	public function editMaterial(){
+	public function editMaterial($data, $materialsID){
+		$this->db->where('materialsID', $materialsID);
+		$this->db->update('materials', $data);
+	}
+	/*
+	public function deleteMaterial($id){
+		$this->db->where('materialsID', $id);
+		$this->db->delete('materials');
+	}
+	*/
+
+	public function editInvoice(){
 
 	}
 
-	public function deleteMaterial(){
-
-	}
-
-	public function addJob(){
-
-	}
-
-	public function editJob(){
-
-	}
-
-	public function deleteJob(){
-
+	public function deleteInvoice($id){
+		$tables = array('jobmaterials', 'invoices');
+		$this->db->where('invoiceID', $id);
+		$this->db->delete($tables);
 	}
 
 	public function markAsPaid($id){
@@ -44,6 +49,15 @@ Class Table extends CI_Model {
 	}
 
 	public function getInvoices(){
+		$this->db->select('hoursWorked, totalCost, totalPrice, dateCompleted, addressLine1, paid, invoiceLink, invoiceID');
+		$this->db->from('invoices');
+		$this->db->join('customers', 'customers.customerID = invoices.customersID');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
+	public function invoiceJsonSearch($id){
 		$this->db->select('hoursWorked, totalCost, totalPrice, dateCompleted, addressLine1, paid, invoiceLink');
 		$this->db->from('invoices');
 		$this->db->join('customers', 'customers.customerID = invoices.customersID');
@@ -71,6 +85,35 @@ Class Table extends CI_Model {
 		$this->db->from('invoices');
 		$this->db->like('addressLine1', $search);
 		$this->db->join('customers', 'customers.customerID = invoices.customersID');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
+	public function invoiceEditJsonSearch($id){
+		$this->db->select('*');
+		$this->db->from('invoices');
+		$this->db->where('invoiceID', $id);
+		$this->db->join('customers', 'customers.customerID = invoices.customersID');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
+	public function getJobmaterials($id){
+		$this->db->select('*');
+		$this->db->from('jobmaterials');
+		$this->db->where('invoiceID', $id);
+		$this->db->join('materials', 'materials.materialsID = jobmaterials.materialsID');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
+	public function customerJsonSearch($id){
+		$this->db->select('*');
+		$this->db->from('customers');
+		$this->db->where('customerID', $id);
 		$query = $this->db->get();
 
 		return $query->result();
@@ -129,6 +172,15 @@ Class Table extends CI_Model {
 	public function getMaterials(){
 		$this->db->select('*');
 		$this->db->from('materials');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+
+	public function getMaterialsJson($id){
+		$this->db->select('*');
+		$this->db->from('materials');
+		$this->db->where('materialsID', $id);
 		$query = $this->db->get();
 
 		return $query->result();

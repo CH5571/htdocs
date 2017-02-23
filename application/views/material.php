@@ -12,6 +12,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
+<script type="text/javascript">
+	/*
+	* Function to get material values 
+	* and add them to material edit modal
+	*/
+	function getMaterialsEdit(materialsID) {
+	console.log(materialsID);
+
+	$.ajax({
+		url: "http://[::1]/htdocs/index.php/User/getMaterialEditJson",
+		type: "POST",
+		dataType: "json",
+		data: { 'q' : materialsID },
+		 success: function(data) {
+		 		console.log(data);
+                $("#materialIdJson").val(data[0].materialsID);
+                $("#materialNameJson").val(data[0].materialName);
+                $("#priceJson").val(data[0].price);                
+              }
+	});
+}
+</script>
+
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -106,7 +129,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Add Customer</h4>
+				<h4 class="modal-title">Add Material</h4>
 			</div>
 			<div class="modal-body">
 				<?php echo form_open('User/addMaterial');?>
@@ -120,6 +143,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary mdl">Add Material</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>	
+</div>
+
+<div class="modal fade" id="editMaterial" tabindex="-1" role="dialog" aria-labelledby="editMaterial" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Edit Material</h4>
+			</div>
+			<div class="modal-body">
+				<?php echo form_open('User/editMaterial');?>
+					<input type="hidden" name="materialIdJson" id="materialIdJson">	
+					<div class="form-group">
+						<label for="forenameInput">Material Name</label>
+						<input type="text" name="materialNameJson" id="materialNameJson"><br>
+					</div>
+					<div class="form-group">
+						<label for="surnameInput">Price</label>
+						<input type="number" name="priceJson" step="any" id="priceJson"><br>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary mdl">Edit Material</button>
 					</div>
 				</form>
 			</div>
@@ -152,6 +202,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<tr>
 						<td><?php echo $materials->materialName; ?></td>
 						<td><?php echo '£'.$materials->price; ?></td>
+						<td><a class="btn btn-secondary" data-toggle="modal" data-target="#editMaterial" <?php echo'id="'.$materials->materialsID . '"' ?> role="button" onclick="getMaterialsEdit(this.id);">Edit</a></td>
 					</tr>
 				<?php } ?>
 			</tbody>
