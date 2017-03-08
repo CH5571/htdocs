@@ -145,7 +145,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 <script type="text/javascript">
-
+var count = 0;
 
 function getCustomers() {
 	console.log($('#invoiceCustomer').val());
@@ -181,7 +181,7 @@ function addMaterialTbl() {
 		 		console.log("Data: "+data);  
 		 		var selectedPrice = data[0].price;
 		 		var totalCost = selectedPrice * selectedQty;
-                $('#materialTable > tbody:last-child').last().append('<tr class="materialRow"><td>'+selectedName+'</td><td class="materialQty">'+selectedQty+'</td><td>'+totalCost+'</td><input type="hidden" name="materialQtyData[]" value="'+selectedQty+'"/><input type="hidden" name="materialTotalPrice[]" value="'+totalCost+'"/><input type="hidden" name="materialIdData[]" value="'+selectedID+'"/></tr>');
+                $('#materialTable > tbody:last-child').last().append('<tr class="materialRow" id="materialRow'+count+'"><td>'+selectedName+'</td><td class="materialQty">'+selectedQty+'</td><td>'+totalCost+'</td><input type="hidden" name="materialQtyData[]" value="'+selectedQty+'"/><input type="hidden" name="materialTotalPrice[]" value="'+totalCost+'"/><input type="hidden" name="materialIdData[]" value="'+selectedID+'"/><td><a class="btn btn-danger" id="'+count+'" role="button" onclick="removeRowEdit(this.id);">Remove</a></td></tr>');
               }
 	});
 
@@ -194,6 +194,11 @@ function addMaterialTbl() {
 	//console.log("Total Cost: " + totalCost);
 
 
+}
+
+function removeRowEdit(rowid){ 
+	var row = "#materialRow" + rowid;
+	$(row).remove();
 }
 
 
@@ -240,7 +245,7 @@ function getMaterials() {
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">Logo</a>
+			<a class="navbar-brand" href="#">M J Harris ELectrical</a>
 		</div>
 		<ul class="nav navbar-nav navbar-left">
 			<li><a href="http://[::1]/htdocs/index.php/User/dashboard">Dashboard</a></li>

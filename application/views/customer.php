@@ -6,11 +6,51 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
-	<title>Customer</title></head>
+	<title>Customer</title>
+</head>
 <body>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<?php if($this->session->flashdata('error') === 'true') {
+	$this->session->set_flashdata('error', 'false');
+	echo '<script type="text/javascript"> 
+
+	$(document).ready(function() {'; ?>
+		<?php foreach($customer as $customers) { ?>
+		  	<?php echo 'var customerID = '.$customers->customerID.';'; ?>
+			<?php echo 'var forename = '.'"'.$customers->forename.'";'; ?>
+			<?php echo 'var surname = '.'"'.$customers->surname.'";'; ?>
+			<?php echo 'var addressLine1 = '.'"'.$customers->addressLine1.'";'; ?>
+			<?php echo 'var addressLine2 = '.'"'.$customers->addressLine2.'";'; ?>
+			<?php echo 'var addressLine3 = '.'"'.$customers->addressLine3.'";'; ?>
+			<?php echo 'var city = '.'"'.$customers->city.'";'; ?>
+			<?php echo 'var postcode = '.'"'.$customers->postcode.'";'; ?>
+			<?php echo 'var telephoneNumber = '.'"'.$customers->telephoneNumber.'";'; ?>
+			<?php echo 'var email = '.'"'.$customers->email.'";'; ?>
+		<?php } ?>
+
+		console.log(surname);
+
+		$("#customerIdJson").val(customerID);
+        $("#forenameJson").val(forename);
+        $("#surnameJson").val(surname);
+        $("#addressLine1Json").val(addressLine1);
+        $("#addressLine2Json").val(addressLine2);
+        $("#addressLine3Json").val(addressLine3);
+        $("#cityJson").val(city);
+        $("#postcodeJson").val(postcode);
+        $("#telephoneNumberJson").val(telephoneNumber);
+        $("#emailJson").val(email);
+	  
+	  $("#editCustomer").modal("show");
+	 })
+	 </script>';
+
+
+	
+<?php } ?>
 
 <script type="text/javascript">
 	function getCustomersEdit(customerID) {
@@ -36,6 +76,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               }
 	});
 }
+
+/*function editCustomer(){
+	var customerID = $("#customerIdJson").val;
+    var forename = $("#forenameJson").val;
+    var surname = $("#surnameJson").val;
+    var addressLine1 = $("#addressLine1Json").val;
+    var addressLine2 = $("#addressLine2Json").val;
+    var addressLine3 = $("#addressLine3Json").val;
+    var city = $("#cityJson").val;
+    var postcode = $("#postcodeJson").val;
+    var telephoneNumber = $("#telephoneNumberJson").val;
+    var email = $("#emailJson").val;
+
+	$.ajax({
+		url: "http://[::1]/htdocs/index.php/User/editCustomer",
+		type: "POST",
+		data: { 'customerIdJson' : customerID,
+				'forenameJson' : forename,
+				'surnameJson' : surname,
+				'addressLine1Json' : addressLine1,
+				'addressLine2Json' : addressLine2,
+				'addressLine3Json' : addressLine3,
+				'cityJson' : city,
+				'postcodeJson' : postcode,
+				'telephoneNumberJson' : telephoneNumber,
+				'emailJson' : email
+		 },
+		 dataType: "html",
+		 success: function(results) {
+                alert('Customer edited');
+         	}
+	});
+}
+*/
 </script>
 
 <nav class="navbar navbar-default">
@@ -161,41 +235,50 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<h4 class="modal-title">Edit Customer</h4>
 			</div>
 			<div class="modal-body">
-				<?php echo form_open('User/editCustomer');?>
+				<?php echo form_open('User/editCustomer'); ?>
 					<input type="hidden" name="customerIdJson" id="customerIdJson">					
 					<div class="form-group">
+						<?php echo form_error('forenameJson'); ?>
 						<label for="forenameInput">Forename</label>
 						<input type="text" name="forenameJson" placeholder="John" id="forenameJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('surnameJson'); ?>
 						<label for="surnameInput">Surname</label>
 						<input type="text" name="surnameJson" placeholder="Smith" id="surnameJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('addressLine3Json'); ?>
 						<label for="addressLine1Input">Address Line 1</label>
 						<input type="text" name="addressLine1Json" placeholder="10 Example Road" id="addressLine1Json"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('addressLine2Json'); ?>
 						<label for="addressLine2Input">Address Line 2</label>
 						<input type="text" name="addressLine2Json" placeholder="Optional" id="addressLine2Json"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('addressLine3Json'); ?>
 						<label for="addressLine3Input">Address Line 3</label>
 						<input type="text" name="addressLine3Json" placeholder="Optional" id="addressLine3Json"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('cityJson'); ?>
 						<label for="cityInput">City</label>
 						<input type="text" name="cityJson" placeholder="Ipswich" id="cityJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('postcodeJson'); ?>
 						<label for="postcodeInput">Postcode</label>
 						<input type="text" name="postcodeJson" placeholder="IP11 0ST" id="postcodeJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('telephoneNumberJson'); ?>
 						<label for="telephoneNumberInput">Telephone Number</label>
 						<input type="text" name="telephoneNumberJson" placeholder="07950881070" id="telephoneNumberJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('emailJson'); ?>
 						<label for="emailInput">Email</label>
 						<input type="text" name="emailJson" placeholder="example@example.com" id="emailJson"><br>
 					</div>
@@ -210,6 +293,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div class="container">
 	<div class="row">
+		<?php if($this->session->flashdata('error') != NULL) {
+		echo validation_errors();
+
+		echo '<script type="text/javascript"> 
+
+		$(document).ready(function() {
+		  
+		  $("#editCustomer").modal("show");
+		 })
+		 </script>';
+
+
+		
+	}?>
 				<h1>Welcome to the customer page</h1>
 				<?php echo form_open('User/searchCustomer');?>
 					<div class="form-inline">

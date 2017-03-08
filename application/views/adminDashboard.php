@@ -27,6 +27,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="col-md-4"></div>
 		<div class="col-md-4 text-center">
 				<h1>Welcome to the admin page</h1>
+				<?php if($this->session->flashdata('message') != NULL) { ?>
+				<?php echo $this->session->flashdata('message'); ?>
+				<?php } ?>
 				<table class="table table-striped table-bordered">
 					<thead>
 						<tr>

@@ -30,7 +30,7 @@ Class User extends CI_Controller{
 		$this->form_validation->set_rules('password', 'Password', 'required|max_length[20]');
 		if(!$this->form_validation->run()){
 			$this->load->view('welcome_message');
-			echo "Error, incorrect username or password";
+			//echo "Error, incorrect username or password";
 		} else if ($this->ion_auth->login($this->input->post('username'), $this->input->post('password'))) {
 			if (!$this->ion_auth->is_admin()) {
 				redirect('User/dashboard');
@@ -38,9 +38,7 @@ Class User extends CI_Controller{
 				redirect('User/adminPage');
 			}
 		} else {
-			//Fix session DO NOT USE $_SESSION refer to ci manuals
-			$_SESSION['auth_message'] = $this->ion_auth->errors();
-            $this->session->mark_as_flash('auth_message');
+			$this->session->set_flashdata('auth_message', $this->ion_auth->errors());
             $this->load->view('welcome_message');
 
 		}
@@ -174,7 +172,34 @@ Class User extends CI_Controller{
 		$this->form_validation->set_rules('emailJson', 'EmailJson', 'required|max_length[75]');
 
 		if (!$this->form_validation->run()){
-			$error = validation_errors();
+			$this->session->set_flashdata('error', 'true');
+
+			$customerID = $this->input->post('customerIdJson');
+			$forename = $this->input->post('forenameJson');
+			$surname = $this->input->post('surnameJson');
+			$addressLine1 = $this->input->post('addressLine1Json');
+			$addressLine2 = $this->input->post('addressLine2Json');
+			$addressLine3 = $this->input->post('addressLine3Json');
+			$city = $this->input->post('cityJson');
+			$postcode = $this->input->post('postcodeJson');
+		    $telephoneNumber = $this->input->post('telephoneNumberJson');
+			$email = $this->input->post('emailJson');
+
+			$editData = array(
+				'forename' => $forename,
+				'surname' => $surname,
+				'addressLine1' => $addressLine1,
+				'addressLine2' => $addressLine2,
+				'addressLine3' => $addressLine3,
+				'city' => $city,
+				'postcode' => $postcode,
+				'telephoneNumber' => $telephoneNumber,
+				'email' => $email
+			);
+
+			$data['customer'] = $this->Table->getCustomers();
+
+			$this->load->view('customer', $data, $editData);
 		} else {
 			$customerID = $this->input->post('customerIdJson');
 			$forename = $this->input->post('forenameJson');
@@ -343,7 +368,7 @@ Class User extends CI_Controller{
 			//Send data to createPdf controller
 			$this->session->set_flashdata('nextID', $nextID);
 			$this->session->set_flashdata('customerID', $customerID);
-			$this->session->set_flashdata('totalCost', $invoicetotalCost);
+			$this->session->set_flashdata('totalCost', $invoiceTotalCost);
 			$this->session->set_flashdata('filename', $filename);
 
 
@@ -395,7 +420,11 @@ Class User extends CI_Controller{
 		}
 	}
 
+	/*
+	* This method adds a new user if the form inputs are valid
+	*/
 	public function addUser(){
+		//Set form validation rules for every input
 		$this->form_validation->set_rules('username', 'Username', 'required|max_length[100]');
 		$this->form_validation->set_rules('password', 'Password', 'required|max_length[20]');
 		$this->form_validation->set_rules('retypepassword', 'Retypepassword', 'required|max_length[20]', 'callback_passwordsMatch');
@@ -403,9 +432,11 @@ Class User extends CI_Controller{
 		$this->form_validation->set_rules('group[]', 'Group', 'required', 'integer');
 
 		if (!$this->form_validation->run()) {
+			//Validation fail
 			$error = validation_errors();
-			redirect('User/adminPage');
+			$this->load->view('adminDashboard', $error);
 		} else {
+			//Validation success
 			$this->ion_auth->register(
 				$this->input->post('username'),
 				$this->input->post('password'),
@@ -533,6 +564,7 @@ Class User extends CI_Controller{
 	* TODO invLink value ID & edit & delete val id or hidden input
 	*/
 	public function createPdf(){
+		$gbp = utf8_decode("£");
 		$pdf = new Pdf();
     	$pdf->AddPage();
     	$pdf->SetFont('Arial','B',12);
@@ -591,8 +623,9 @@ Class User extends CI_Controller{
 	        $pdf->Ln();
 	    }
 	     
+	    $pdf->setX(122.5);
     	$pdf->Cell(37.5, 6, "Total", 1); 
-    	$pdf->Cell(37.5, 6, '£' . $totalCost, 1, 1, 'L');
+    	$pdf->Cell(37.5, 6, $gbp . $totalCost, 1, 1);
 
    		//Output as pdf and save to /pdf folder
     	$pdf->Output('F', 'C:/xampp/htdocs/htdocs/assets/pdf/'.$filename);

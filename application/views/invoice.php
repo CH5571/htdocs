@@ -110,7 +110,7 @@ function addMaterialTbl() {
 		 		console.log("Data: "+data);  
 		 		var selectedPrice = data[0].price;
 		 		var totalCost = selectedPrice * selectedQty;
-                $('#materialTable > tbody:last-child').last().append('<tr class="materialRow"><td>'+selectedName+'</td><td class="materialQty">'+selectedQty+'</td><td>'+totalCost+'</td><input type="hidden" name="materialQtyData[]" value="'+selectedQty+'"/><input type="hidden" name="materialTotalPrice[]" value="'+totalCost+'"/><input type="hidden" name="materialIdData[]" value="'+selectedID+'"/></tr>');
+                $('#materialTable > tbody:last-child').last().append('<tr class="materialRow" id="materialRow'+count+'"><td>'+selectedName+'</td><td class="materialQty">'+selectedQty+'</td><td>'+totalCost+'</td><input type="hidden" name="materialQtyData[]" value="'+selectedQty+'"/><input type="hidden" name="materialTotalPrice[]" value="'+totalCost+'"/><input type="hidden" name="materialIdData[]" value="'+selectedID+'"/><td><a class="btn btn-danger" id="'+count+'" role="button" onclick="removeRowEdit(this.id);">Remove</a></td></tr>');
               }
 	});
 
