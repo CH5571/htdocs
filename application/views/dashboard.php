@@ -22,17 +22,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     google.charts.setOnLoadCallback(createChart);
 
     function createChart(){
+    	//Make post request to getGraphData method in User controller
+    	//This will return totalCost, totalPrice and dateCreated as a JSON
     	$.ajax({
     		url: "http://[::1]/htdocs/index.php/User/getGraphData",
     		type: "POST",
     		dataType: "json",
     		success: function(data1){
+    			//Adds a new table
     			var data = new google.visualization.DataTable();
+    			//Adding columns to the table
     			data.addColumn('string', 'Date');
                 data.addColumn('number', 'Revenue');
                 data.addColumn('number', 'Cost');
                 data.addColumn('number', 'Profit');
                 
+                //Creating array of objects to store datat for each month
                 var graphData = [
 			        { "month": "January", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
 			        { "month": "February", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
@@ -54,68 +59,74 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	            	var profit = data1[i].totalPrice - data1[i].totalCost;
 	            	var date = data1[i].invoiceCreated;
 	            	var month = date.substring(5, 7);
+	            	var year = date.substring(0, 4);
+	            	var currentTime = new Date();
+	            	var currentYear = currentTime.getFullYear();
 	            	console.log(month);
+
+	            	if (currentYear == year) {
 	            	
-	            	switch (month) {
-					    case "01":
-					        graphData[0].totalPrice += data1[i].totalPrice;
-					        graphData[0].totalCost += data1[i].totalCost;
-					        graphData[0].totalProfit += profit;
-					        break;
-					    case "02":
-					        graphData[1].totalPrice += data1[i].totalPrice;
-					        graphData[1].totalCost += data1[i].totalCost;
-					        graphData[1].totalProfit += profit;
-					        break;
-					    case "03":
-					        graphData[2].totalPrice += data1[i].totalPrice;
-					        graphData[2].totalCost += data1[i].totalCost;
-					        graphData[2].totalProfit += profit;
-					        break;
-					    case "04":
-					        graphData[3].totalPrice += data1[i].totalPrice;
-					        graphData[3].totalCost += data1[i].totalCost;
-					        graphData[3].totalProfit += profit;
-					        break;
-					    case "05":
-					        graphData[4].totalPrice += data1[i].totalPrice;
-					        graphData[4].totalCost += data1[i].totalCost;
-					        graphData[4].totalProfit += profit;
-					        break;
-					    case "06":
-					        graphData[5].totalPrice += data1[i].totalPrice;
-					        graphData[5].totalCost += data1[i].totalCost;
-					        graphData[5].totalProfit += profit;
-					        break;
-					    case "07":
-					        graphData[6].totalPrice += data1[i].totalPrice;
-					        graphData[6].totalCost += data1[i].totalCost;
-					        graphData[6].totalProfit += profit;
-					        break;
-					    case "08":
-					        graphData[7].totalPrice += data1[i].totalPrice;
-					        graphData[7].totalCost += data1[i].totalCost;
-					        graphData[7].totalProfit += profit;
-					        break;
-					    case "09":
-					        graphData[8].totalPrice += data1[i].totalPrice;
-					        graphData[8].totalCost += data1[i].totalCost;
-					        graphData[8].totalProfit += profit;
-					        break;
-					    case "10":
-					        graphData[9].totalPrice += data1[i].totalPrice;
-					        graphData[9].totalCost += data1[i].totalCost;
-					        graphData[9].totalProfit += profit;
-					        break;
-					    case "11":
-					        graphData[10].totalPrice += data1[i].totalPrice;
-					        graphData[10].totalCost += data1[i].totalCost;
-					        graphData[10].totalProfit += profit;
-					        break;
-					    default:
-					        graphData[11].totalPrice += data1[i].totalPrice;
-					        graphData[11].totalCost += data1[i].totalCost;
-					        graphData[11].totalProfit += profit;
+		            	switch (month) {
+						    case "01":
+						        graphData[0].totalPrice += parseFloat(data1[i].totalPrice + graphData[0].totalPrice);
+						        graphData[0].totalCost += parseFloat(data1[i].totalCost + graphData[0].totalCost);
+						        graphData[0].totalProfit += parseFloat(profit);	
+						        break;
+						    case "02":
+						        graphData[1].totalPrice += parseFloat(data1[i].totalPrice + graphData[1].totalPrice);
+						        graphData[1].totalCost += parseFloat(data1[i].totalCost + graphData[1].totalCost);
+						        graphData[1].totalProfit += parseFloat(profit);	
+						        break;
+						    case "03":						    	
+						        graphData[2].totalPrice += parseFloat(data1[i].totalPrice + graphData[2].totalPrice);
+						        graphData[2].totalCost += parseFloat(data1[i].totalCost + graphData[2].totalCost);
+						        graphData[2].totalProfit += parseFloat(profit);						        					        
+						        break;
+						    case "04":
+						        graphData[3].totalPrice += parseFloat(data1[i].totalPrice + graphData[3].totalPrice);
+						        graphData[3].totalCost += parseFloat(data1[i].totalCost + graphData[3].totalCost);
+						        graphData[3].totalProfit += parseFloat(profit);	
+						        break;
+						    case "05":
+						        graphData[4].totalPrice += parseFloat(data1[i].totalPrice + graphData[4].totalPrice);
+						        graphData[4].totalCost += parseFloat(data1[i].totalCost + graphData[4].totalCost);
+						        graphData[4].totalProfit += parseFloat(profit);	
+						        break;
+						    case "06":
+						        graphData[5].totalPrice += parseFloat(data1[i].totalPrice + graphData[5].totalPrice);
+						        graphData[5].totalCost += parseFloat(data1[i].totalCost + graphData[5].totalCost);
+						        graphData[5].totalProfit += parseFloat(profit);	
+						        break;
+						    case "07":
+						        graphData[6].totalPrice += parseFloat(data1[i].totalPrice + graphData[6].totalPrice);
+						        graphData[6].totalCost += parseFloat(data1[i].totalCost + graphData[6].totalCost);
+						        graphData[6].totalProfit += parseFloat(profit);	
+						        break;
+						    case "08":
+						        graphData[7].totalPrice += parseFloat(data1[i].totalPrice + graphData[7].totalPrice);
+						        graphData[7].totalCost += parseFloat(data1[i].totalCost + graphData[7].totalCost);
+						        graphData[7].totalProfit += parseFloat(profit);	
+						        break;
+						    case "09":
+						        graphData[8].totalPrice += parseFloat(data1[i].totalPrice + graphData[8].totalPrice);
+						        graphData[8].totalCost += parseFloat(data1[i].totalCost + graphData[8].totalCost);
+						        graphData[8].totalProfit += parseFloat(profit);	
+						        break;
+						    case "10":
+						        graphData[9].totalPrice += parseFloat(data1[i].totalPrice + graphData[9].totalPrice);
+						        graphData[9].totalCost += parseFloat(data1[i].totalCost + graphData[9].totalCost);
+						        graphData[9].totalProfit += parseFloat(profit);	
+						        break;
+						    case "11":
+						        graphData[10].totalPrice += parseFloat(data1[i].totalPrice + graphData[10].totalPrice);
+						        graphData[10].totalCost += parseFloat(data1[i].totalCost + graphData[10].totalCost);
+						        graphData[10].totalProfit += parseFloat(profit);	
+						        break;
+						    default:
+						        graphData[11].totalPrice += parseFloat(data1[i].totalPrice + graphData[11].totalPrice);
+						        graphData[11].totalCost += parseFloat(data1[i].totalCost + graphData[11].totalCost);
+						        graphData[11].totalProfit += parseFloat(profit);	
+						}
 					} 	
 	            }
 				
@@ -245,7 +256,7 @@ function getMaterials() {
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">M J Harris ELectrical</a>
+			<a class="navbar-brand" href="#">M J Harris Electrical</a>
 		</div>
 		<ul class="nav navbar-nav navbar-left">
 			<li><a href="http://[::1]/htdocs/index.php/User/dashboard">Dashboard</a></li>

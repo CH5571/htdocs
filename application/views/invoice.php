@@ -12,6 +12,43 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
+
+<?php if($this->session->flashdata('error') === 'true') {
+$this->session->set_flashdata('error', 'false');
+echo '<script type="text/javascript"> 
+
+$(document).ready(function() {'; ?>
+	<?php foreach($invoice as $invoices) { ?>
+	  	<?php echo 'var invoiceID = '.$invoices->invoiceID.';'; ?>
+		'hoursWorked' => $hoursWorked,
+		'jobDescription' => $jobDescription,
+		'totalCost' => $invoiceTotalCost,
+		'totalPrice' => $totalPrice,
+		'dateCompleted' => $dateCompleted,
+		'paid' => $paid,
+		'invoiceLink' => $filename,
+		'customersID' => $customerID,
+	<?php } ?>
+
+	console.log(surname);
+
+	$("#customerIdJson").val(customerID);
+    $("#forenameJson").val(forename);
+    $("#surnameJson").val(surname);
+    $("#addressLine1Json").val(addressLine1);
+    $("#addressLine2Json").val(addressLine2);
+    $("#addressLine3Json").val(addressLine3);
+    $("#cityJson").val(city);
+    $("#postcodeJson").val(postcode);
+    $("#telephoneNumberJson").val(telephoneNumber);
+    $("#emailJson").val(email);
+  
+  $("#editCustomer").modal("show");
+ })
+ </script>';
+	
+<?php } ?>
+
 <script type="text/javascript">
 
 var count = 0;

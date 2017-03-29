@@ -7,6 +7,7 @@ Class User extends CI_Controller{
 	public function __construct(){
 		parent::__construct();
 		$this->load->library('form_validation');
+		$this->load->helper('security');
 		$this->load->helper('form');
 		$this->load->helper('url');
 		$this->load->model('Table');
@@ -161,15 +162,15 @@ Class User extends CI_Controller{
 	}
 
 	public function editCustomer(){
-		$this->form_validation->set_rules('forenameJson', 'ForenameJson', 'required|max_length[45]');
-		$this->form_validation->set_rules('surnameJson', 'SurnameJson', 'required|max_length[45]');
-		$this->form_validation->set_rules('addressLine1Json', 'AddressLine1Json', 'required|max_length[75]');
-		$this->form_validation->set_rules('addressLine2Json', 'AddressLine2Json', 'max_length[75]');
-		$this->form_validation->set_rules('addressLine3Json', 'AddressLine3Json', 'max_length[75]');
-		$this->form_validation->set_rules('cityJson', 'CityJson', 'required|max_length[45]');
-		$this->form_validation->set_rules('postcodeJson', 'PostcodeJson', 'required|max_length[8]');
-		$this->form_validation->set_rules('telephoneNumberJson', 'TelephoneNumberJson', 'required|max_length[11]');
-		$this->form_validation->set_rules('emailJson', 'EmailJson', 'required|max_length[75]');
+		$this->form_validation->set_rules('forenameJson', 'Forename', 'required|max_length[45]');
+		$this->form_validation->set_rules('surnameJson', 'Surname', 'required|max_length[45]');
+		$this->form_validation->set_rules('addressLine1Json', 'AddressLine1', 'required|max_length[75]');
+		$this->form_validation->set_rules('addressLine2Json', 'AddressLine2', 'max_length[75]');
+		$this->form_validation->set_rules('addressLine3Json', 'AddressLine3', 'max_length[75]');
+		$this->form_validation->set_rules('cityJson', 'City', 'required|max_length[45]');
+		$this->form_validation->set_rules('postcodeJson', 'Postcode', 'required|max_length[8]');
+		$this->form_validation->set_rules('telephoneNumberJson', 'TelephoneNumber', 'required|max_length[11]');
+		$this->form_validation->set_rules('emailJson', 'Email', 'required|max_length[75]');
 
 		if (!$this->form_validation->run()){
 			$this->session->set_flashdata('error', 'true');
@@ -233,6 +234,10 @@ Class User extends CI_Controller{
 			//TODO Add code to determine users page so they are not redirected to an incorrect page
 			redirect('User/customerPage', 'refresh');
 		}
+	}
+
+	public function editInvoice(){
+
 	}
 
 	public function deleteUser($id){
@@ -545,9 +550,11 @@ Class User extends CI_Controller{
 		if (!$this->form_validation->run()) {
 			$error = validation_errors();
 		} else {
-			
+			$materialName = $this->input->post('materialName');
+			$materialName = $this->security->xss_clean($materialName);
+
 			$data = array(
-				'materialName' => $this->input->post('materialName'),
+				'materialName' => $materialName,
 				'price' => $this->input->post('price')
 			);
 

@@ -4,8 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
+	<link rel="stylesheet" type="text/css" href="xampp/htdocs/htdocs/assets/css/main.css">
 	<title>Customer</title>
 </head>
 <body>
@@ -115,7 +116,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">Logo</a>
+			<a class="navbar-brand" href="#">M J Harris Electrical</a>
 		</div>
 		<ul class="nav navbar-nav navbar-left">
 			<li><a href="http://[::1]/htdocs/index.php/User/dashboard">Dashboard</a></li>
