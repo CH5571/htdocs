@@ -22,6 +22,9 @@ Class User extends CI_Controller{
 		
 	}
 
+	/*
+	* Function to load login page
+	*/
 	public function index(){
 		$this->load->view('welcome_message');
 	}
@@ -158,10 +161,18 @@ Class User extends CI_Controller{
 	* Function to edit user 
 	*/
 	public function editUser($userId){
-
+		$this->form_validation->set_rules('username', 'Username', 'required|max_length[100]');
+		$this->form_validation->set_rules('password', 'Password', 'required|max_length[20]');
+		$this->form_validation->set_rules('retypepassword', 'Retypepassword', 'required|max_length[20]', 'callback_passwordsMatch');
+		$this->form_validation->set_rules('email', 'Email', 'required|max_length[45]');
+		$this->form_validation->set_rules('group[]', 'Group', 'required', 'integer');
 	}
 
+	/*
+	* Function to edit customer
+	*/
 	public function editCustomer(){
+		//Validation rules
 		$this->form_validation->set_rules('forenameJson', 'Forename', 'required|max_length[45]');
 		$this->form_validation->set_rules('surnameJson', 'Surname', 'required|max_length[45]');
 		$this->form_validation->set_rules('addressLine1Json', 'AddressLine1', 'required|max_length[75]');
@@ -173,7 +184,7 @@ Class User extends CI_Controller{
 		$this->form_validation->set_rules('emailJson', 'Email', 'required|max_length[75]');
 
 		if (!$this->form_validation->run()){
-			$this->session->set_flashdata('error', 'true');
+			$this->session->set_flashdata('editError', 'true');
 
 			$customerID = $this->input->post('customerIdJson');
 			$forename = $this->input->post('forenameJson');
@@ -186,7 +197,8 @@ Class User extends CI_Controller{
 		    $telephoneNumber = $this->input->post('telephoneNumberJson');
 			$email = $this->input->post('emailJson');
 
-			$editData = array(
+			$editCustomerData = (object) array(
+				'customerID' => $customerID,
 				'forename' => $forename,
 				'surname' => $surname,
 				'addressLine1' => $addressLine1,
@@ -198,9 +210,11 @@ Class User extends CI_Controller{
 				'email' => $email
 			);
 
+			$data['customerEdit'] = $editCustomerData;
+
 			$data['customer'] = $this->Table->getCustomers();
 
-			$this->load->view('customer', $data, $editData);
+			$this->load->view('customer', $data);
 		} else {
 			$customerID = $this->input->post('customerIdJson');
 			$forename = $this->input->post('forenameJson');
@@ -237,7 +251,96 @@ Class User extends CI_Controller{
 	}
 
 	public function editInvoice(){
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
 
+			$this->form_validation->set_rules('invoiceIDJson', 'invoiceID', 'required|integer');
+			$this->form_validation->set_rules('customerSelectJson', 'customerSelect', 'required|integer');
+			$this->form_validation->set_rules('hoursWorkedJson', 'Hours Worked', 'required|integer');
+			$this->form_validation->set_rules('totalPriceJson', 'Total Price', 'required|decimal');
+			$this->form_validation->set_rules('jobDescriptionJson', 'Job Descripton', 'required|max_length[175]');
+			$this->form_validation->set_rules('dateCompletedJson', 'Date Completed', 'required');
+			$this->form_validation->set_rules('paidOptionsJson', 'Paid Option', 'required|integer');
+			$this->form_validation->set_rules('materialIdDataJson[]', 'Material ID', 'required|integer');
+			$this->form_validation->set_rules('materialQtyDataJson[]', 'Material Qty', 'required|integer');
+			$this->form_validation->set_rules('materialTotalPriceJson[]', 'Material Price', 'required|decimal');
+
+			if (!$this->form_validation->run()) {
+				$error = validation_errors();
+				echo $error;
+				//LOOK AT HOW CUSTOMERS WORKS
+			} else {
+				$invoiceID = $this->input->post('invoiceIDJson');					
+				$invoiceTotalCost = 0.00;
+
+				//Data for JobMaterials Table
+				$materialID = $this->input->post('materialIdDataJson');
+				$materialQty = $this->input->post('materialQtyDataJson');
+				$materialTotalPrice = $this->input->post('materialTotalPriceJson');
+
+				//Assign values from material table to array
+				for ($i=0; $i < count($materialID); $i++) { 
+					$invoiceTotalCost = $invoiceTotalCost + $materialTotalPrice[$i];
+				}
+
+				//Invoice Data
+				$customerID = $this->input->post('customerSelectJson');
+				$hoursWorked = $this->input->post('hoursWorkedJson');
+				$totalPrice = $this->input->post('totalPriceJson');
+				$jobDescription = $this->input->post('jobDescriptionJson');
+				$dateCompleted = $this->input->post('dateCompletedJson');
+				$paid = $this->input->post('paidOptionsJson');
+				$dateCreated = date("Y-m-d");
+				$dateCreatedDB = date('Y-m-d', strtotime(str_replace('-', '/', $dateCreated)));
+
+				$addressLine1 = $this->Table->getAddressLine1($customerID);
+				$filename = 'MJH'.$addressLine1.$dateCreated.'.pdf';
+
+				$invoiceData = array(
+					'hoursWorked' => $hoursWorked,
+					'jobDescription' => $jobDescription,
+					'totalCost' => $invoiceTotalCost,
+					'totalPrice' => $totalPrice,
+					'dateCompleted' => $dateCompleted,
+					'paid' => $paid,
+					'invoiceLink' => $filename,
+					'customersID' => $customerID,
+					'invoiceCreated' => $dateCreatedDB
+				);
+
+
+				//Insert Invoice to db
+				$this->Table->editInvoice($invoiceData, $invoiceID);
+
+				//Declare array to store jobmaterials data to insert to db
+				$jobMaterialData = [];
+
+				for ($j=0; $j < sizeof($materialID); $j++) { 
+					$jobMaterialData[] = array(
+						'invoiceID' => $invoiceID,
+						'materialsID' => $materialID[$j],
+						'quantity' => $materialQty[$j],
+						'totalCost' => $materialTotalPrice[$j]
+					);	
+				}
+		
+				//Remove old JobMaterials
+				$this->Table->deleteJobMaterials($invoiceID);
+				//Insert $jobMaterials array to db
+				$this->Table->addJobMaterials($jobMaterialData);
+
+				//Send data to createPdf controller
+				$this->session->set_flashdata('nextID', $invoiceID);
+				$this->session->set_flashdata('customerID', $customerID);
+				$this->session->set_flashdata('totalCost', $invoiceTotalCost);
+				$this->session->set_flashdata('filename', $filename);
+
+
+				//Redirect to invoicePage 
+				redirect('User/createPdf');
+			}
+		}
 	}
 
 	public function deleteUser($id){
@@ -391,10 +494,6 @@ Class User extends CI_Controller{
 		}
 	}
 
-	public function invoiceCustomerSearch(){
-		//add ajax - until then use dropdown
-	}
-
 	public function searchInvoice(){
 		$this->form_validation->set_rules('search', 'Search', 'required|max_length[100]');
 
@@ -468,6 +567,35 @@ Class User extends CI_Controller{
 
 		if (!$this->form_validation->run()){
 			$error = validation_errors();
+			$this->session->set_flashdata('error', 'true');
+
+			$forename = $this->input->post('forename');
+			$surname = $this->input->post('surname');
+			$addressLine1 = $this->input->post('addressLine1');
+			$addressLine2 = $this->input->post('addressLine2');
+			$addressLine3 = $this->input->post('addressLine3');
+			$city = $this->input->post('city');
+			$postcode = $this->input->post('postcode');
+		    $telephoneNumber = $this->input->post('telephoneNumber');
+			$email = $this->input->post('email');
+
+			$customerData = (object) array(
+				'forename' => $forename,
+				'surname' => $surname,
+				'addressLine1' => $addressLine1,
+				'addressLine2' => $addressLine2,
+				'addressLine3' => $addressLine3,
+				'city' => $city,
+				'postcode' => $postcode,
+				'telephoneNumber' => $telephoneNumber,
+				'email' => $email
+			);
+
+			$data['customerError'] = $customerData;
+
+			$data['customer'] = $this->Table->getCustomers();
+
+			$this->load->view('customer', $data);
 		} else {
 
 			$forename = $this->input->post('forename');

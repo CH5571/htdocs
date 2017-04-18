@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">Logo</a>
+			<a class="navbar-brand" href="#">M J Harris Electrical</a>
 		</div>
 	</div>
 </nav>

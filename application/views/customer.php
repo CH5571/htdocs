@@ -14,23 +14,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
-<?php if($this->session->flashdata('error') === 'true') {
-	$this->session->set_flashdata('error', 'false');
+<?php if($this->session->flashdata('editError') === 'true') {
+	$this->session->set_flashdata('editError', 'false');
+	print_r($customerEdit->surname);
 	echo '<script type="text/javascript"> 
 
 	$(document).ready(function() {'; ?>
-		<?php foreach($customer as $customers) { ?>
-		  	<?php echo 'var customerID = '.$customers->customerID.';'; ?>
-			<?php echo 'var forename = '.'"'.$customers->forename.'";'; ?>
-			<?php echo 'var surname = '.'"'.$customers->surname.'";'; ?>
-			<?php echo 'var addressLine1 = '.'"'.$customers->addressLine1.'";'; ?>
-			<?php echo 'var addressLine2 = '.'"'.$customers->addressLine2.'";'; ?>
-			<?php echo 'var addressLine3 = '.'"'.$customers->addressLine3.'";'; ?>
-			<?php echo 'var city = '.'"'.$customers->city.'";'; ?>
-			<?php echo 'var postcode = '.'"'.$customers->postcode.'";'; ?>
-			<?php echo 'var telephoneNumber = '.'"'.$customers->telephoneNumber.'";'; ?>
-			<?php echo 'var email = '.'"'.$customers->email.'";'; ?>
-		<?php } ?>
+		
+	  	<?php echo 'var customerID = '.$customerEdit->customerID.';'; ?>
+		<?php echo 'var forename = '.'"'.$customerEdit->forename.'";'; ?>
+		<?php echo 'var surname = '.'"'.$customerEdit->surname.'";'; ?>
+		<?php echo 'var addressLine1 = '.'"'.$customerEdit->addressLine1.'";'; ?>
+		<?php echo 'var addressLine2 = '.'"'.$customerEdit->addressLine2.'";'; ?>
+		<?php echo 'var addressLine3 = '.'"'.$customerEdit->addressLine3.'";'; ?>
+		<?php echo 'var city = '.'"'.$customerEdit->city.'";'; ?>
+		<?php echo 'var postcode = '.'"'.$customerEdit->postcode.'";'; ?>
+		<?php echo 'var telephoneNumber = '.'"'.$customerEdit->telephoneNumber.'";'; ?>
+		<?php echo 'var email = '.'"'.$customerEdit->email.'";'; ?>
+		
 
 		console.log(surname);
 
@@ -46,6 +47,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         $("#emailJson").val(email);
 	  
 	  $("#editCustomer").modal("show");
+	 })
+	 </script>';
+
+
+	
+<?php } ?>
+
+<?php if($this->session->flashdata('error') === 'true') {
+	$this->session->set_flashdata('error', 'false');
+	print_r($customerError->forename);
+	echo '<script type="text/javascript"> 
+
+	$(document).ready(function() {'; ?>
+		
+		<?php echo 'var forename = '.'"'.$customerError->forename.'";'; ?>
+		<?php echo 'var surname = '.'"'.$customerError->surname.'";'; ?>
+		<?php echo 'var addressLine1 = '.'"'.$customerError->addressLine1.'";'; ?>
+		<?php echo 'var addressLine2 = '.'"'.$customerError->addressLine2.'";'; ?>
+		<?php echo 'var addressLine3 = '.'"'.$customerError->addressLine3.'";'; ?>
+		<?php echo 'var city = '.'"'.$customerError->city.'";'; ?>
+		<?php echo 'var postcode = '.'"'.$customerError->postcode.'";'; ?>
+		<?php echo 'var telephoneNumber = '.'"'.$customerError->telephoneNumber.'";'; ?>
+		<?php echo 'var email = '.'"'.$customerError->email.'";'; ?>
+		
+
+		console.log(surname);
+
+        $("#forename").val(forename);
+        $("#surname").val(surname);
+        $("#addressLine1").val(addressLine1);
+        $("#addressLine2").val(addressLine2);
+        $("#addressLine3").val(addressLine3);
+        $("#city").val(city);
+        $("#postcode").val(postcode);
+        $("#telephoneNumber").val(telephoneNumber);
+        $("#email").val(email);
+	  
+	  $("#addCustomer").modal("show");
 	 })
 	 </script>';
 
@@ -159,39 +198,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<?php echo form_open('User/addCustomer');?>
 					<div class="form-group">
 						<label for="forenameInput">Forename</label>
-						<input type="text" name="forename" placeholder="John"><br>
+						<input type="text" name="forename" id="forename" placeholder="John"><br>
 					</div>
 					<div class="form-group">
 						<label for="surnameInput">Surname</label>
-						<input type="text" name="surname" placeholder="Smith"><br>
+						<input type="text" name="surname"  id="surname" placeholder="Smith"><br>
 					</div>
 					<div class="form-group">
 						<label for="addressLine1Input">Address Line 1</label>
-						<input type="text" name="addressLine1" placeholder="10 Example Road"><br>
+						<input type="text" name="addressLine1" id="addressLine1" placeholder="10 Example Road"><br>
 					</div>
 					<div class="form-group">
 						<label for="addressLine2Input">Address Line 2</label>
-						<input type="text" name="addressLine2" placeholder="Optional"><br>
+						<input type="text" name="addressLine2" id="addressLine2" placeholder="Optional"><br>
 					</div>
 					<div class="form-group">
 						<label for="addressLine3Input">Address Line 3</label>
-						<input type="text" name="addressLine3" placeholder="Optional"><br>
+						<input type="text" name="addressLine3" id="addressLine3" placeholder="Optional"><br>
 					</div>
 					<div class="form-group">
 						<label for="cityInput">City</label>
-						<input type="text" name="city" placeholder="Ipswich"><br>
+						<input type="text" name="city" id="city" placeholder="Ipswich"><br>
 					</div>
 					<div class="form-group">
 						<label for="postcodeInput">Postcode</label>
-						<input type="text" name="postcode" placeholder="IP11 0ST"><br>
+						<input type="text" name="postcode" id="postcode" placeholder="IP11 0ST"><br>
 					</div>
 					<div class="form-group">
 						<label for="telephoneNumberInput">Telephone Number</label>
-						<input type="text" name="telephoneNumber" placeholder="07950881070"><br>
+						<input type="text" name="telephoneNumber" id="telephoneNumber" placeholder="07950881070"><br>
 					</div>
 					<div class="form-group">
 						<label for="emailInput">Email</label>
-						<input type="text" name="email" placeholder="example@example.com"><br>
+						<input type="text" name="email" id="email" placeholder="example@example.com"><br>
 					</div>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary mdl">Add Customer</button>

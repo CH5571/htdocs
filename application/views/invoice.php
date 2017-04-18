@@ -32,18 +32,13 @@ $(document).ready(function() {'; ?>
 
 	console.log(surname);
 
-	$("#customerIdJson").val(customerID);
-    $("#forenameJson").val(forename);
-    $("#surnameJson").val(surname);
-    $("#addressLine1Json").val(addressLine1);
-    $("#addressLine2Json").val(addressLine2);
-    $("#addressLine3Json").val(addressLine3);
-    $("#cityJson").val(city);
-    $("#postcodeJson").val(postcode);
-    $("#telephoneNumberJson").val(telephoneNumber);
-    $("#emailJson").val(email);
+	$("#invoiceIdJson").val(invoiceID);
+    $("#hoursWorkedJson").val(hoursWorked);
+    $("#jobDescriptionJson").val(jobDescription);
+    $("#paidJson").val(paid);
+    $("#customersIDJson").val(customersID);
   
-  $("#editCustomer").modal("show");
+  $("#editInvoice").modal("show");
  })
  </script>';
 	
@@ -65,6 +60,7 @@ $.ajax({
 	 		console.log(data);
             $("#invoiceIDJson").val(data[0].invoiceID);
             $("#invoiceCustomerJson").val(data[0].addressLine1);
+            getFirstAddressEdit(data[0].customerID);
             $("#hoursWorkedJson").val(data[0].hoursWorked);
             $("#totalPriceJson").val(data[0].totalPrice);
             $("#jobDescriptionJson").val(data[0].jobDescription);
@@ -76,6 +72,25 @@ $.ajax({
 });
 
 
+}
+
+function getFirstAddressEdit(customerID) {
+	console.log($('#invoiceCustomerJson').val());
+
+	$.ajax({
+		url: "http://[::1]/htdocs/index.php/User/getCustomerEditJson",
+		type: "POST",
+		dataType: "json",
+		data: { 'q' : customerID },
+		 success: function(data) {
+		 		console.log(data);
+                $('select#customerSelectJson').html('');
+                for(var i=0;i<data.length;i++)
+                {
+                    $("<option />").val(data[i].customerID).text(data[i].addressLine1).appendTo($('select#customerSelectJson'));
+                }
+              }
+	});
 }
 
 function outputTable(invoiceID){

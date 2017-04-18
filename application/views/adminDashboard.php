@@ -11,6 +11,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	function getCustomersEdit(customerID) {
+	console.log(customerID);
+
+	$.ajax({
+		url: "http://[::1]/htdocs/index.php/User/getUserEditJson",
+		type: "POST",
+		dataType: "json",
+		data: { 'q' : customerID },
+		 success: function(data) {
+		 		console.log(data);
+                $("#").val(data[0].customerID);
+                $("#forenameJson").val(data[0].forename);
+                $("#surnameJson").val(data[0].surname);
+                $("#addressLine1Json").val(data[0].addressLine1);
+                if (data[0].group == 1) {
+            	$('#memberRadioJson').prop('checked', true);
+            }
+	});
+}
+
+</script>
+
 
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
@@ -93,6 +116,52 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										    </div>
 										</div>
 											<button type="submit" class="btn btn-primary mdl">Signup</button>
+									</form>
+								</div>
+								</div>
+							</div>
+					</div>
+				</div>
+				<div class="modal fade editUserLg" tabindex="-1" role="dialog">
+					<div class="modal-dialog modal-lg" role="document">	
+							<div class="modal-content">
+								<div class="modal-header">
+							 		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							 		<h4 class="modal-title">Edit User</h4>
+								</div>
+								<div class="modal-body">
+									<?php echo form_open('User/editUser'); ?>
+										<div class="form-group">
+											<label for="usernameInput">Username</label>
+											<input type="text" name="usernameJson" id="usernameJson" placeholder="Username"><br>
+										</div>
+										<div class="form-group">
+											<label for="passwordInput">Password</label>
+											<input type="password" name="passwordJson" id="passwordJson" placeholder="Password"><br>
+										</div>
+										<div class="form-group">
+											<label for="passwordInput">Re-type Password</label>
+											<input type="password" name="retypepasswordJson" id="retypepasswordJson" placeholder="Password"><br>
+										</div>
+										<div class="form-group">
+											<label for="emailInput">Email</label>
+											<input type="text" name="emailJson" id="emailJson" placeholder="example@example.com"><br>
+										</div>
+										<div class="form-group">
+											<div class="form-check">
+										      <label class="form-check-label">
+										        <input type="radio" class="form-check-input" name="groupJson" id="adminRadioJson" value="1" checked>
+										        Admin
+										      </label>
+										    </div>
+										    <div class="form-check">
+										    <label class="form-check-label">
+										        <input type="radio" class="form-check-input" name="groupJson" id="memberRadioJson" value="2">
+										        Member
+										    </label>
+										    </div>
+										</div>
+											<button type="submit" class="btn btn-primary mdl">Edit</button>
 									</form>
 								</div>
 								</div>

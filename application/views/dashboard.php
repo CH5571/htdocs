@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 data.addColumn('number', 'Cost');
                 data.addColumn('number', 'Profit');
                 
-                //Creating array of objects to store datat for each month
+                //Creating array of objects to store data for each month
                 var graphData = [
 			        { "month": "January", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
 			        { "month": "February", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },

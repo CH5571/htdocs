@@ -32,8 +32,17 @@ Class Table extends CI_Model {
 	}
 	*/
 
-	public function editInvoice(){
+	public function editInvoice($data, $invoiceID){
+		$this->db->where('invoiceID', $invoiceID);
+		$this->db->update('invoices', $data);
+	}
 
+	/*
+	* Remove job materials where invoice id = id
+	*/
+	public function deleteJobMaterials($id){
+		$this->db->where('invoiceID', $id);
+		$this->db->delete('jobmaterials');
 	}
 
 	public function deleteInvoice($id){
