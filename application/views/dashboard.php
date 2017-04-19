@@ -21,23 +21,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     //When loaded run createChart function
     google.charts.setOnLoadCallback(createChart);
 
+    /*
+	* Create and display chart
+    */
     function createChart(){
     	//Make post request to getGraphData method in User controller
-    	//This will return totalCost, totalPrice and dateCreated as a JSON
+    	//This will return totalCost, totalPrice and invoiceDate as a JSON
     	$.ajax({
     		url: "http://[::1]/htdocs/index.php/User/getGraphData",
     		type: "POST",
     		dataType: "json",
     		success: function(data1){
     			//Adds a new table
-    			var data = new google.visualization.DataTable();
+    			var dataTable = new google.visualization.DataTable();
     			//Adding columns to the table
-    			data.addColumn('string', 'Date');
-                data.addColumn('number', 'Revenue');
-                data.addColumn('number', 'Cost');
-                data.addColumn('number', 'Profit');
+    			dataTable.addColumn('string', 'Date');
+                dataTable.addColumn('number', 'Revenue');
+                dataTable.addColumn('number', 'Cost');
+                dataTable.addColumn('number', 'Profit');
                 
-                //Creating array of objects to store data for each month
+                //Creating array of object literals to store data for each month
                 var graphData = [
 			        { "month": "January", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
 			        { "month": "February", "totalPrice": 0.00, "totalCost": 0.00, "totalProfit": 0.00 },
@@ -62,7 +65,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	            	var year = date.substring(0, 4);
 	            	var currentTime = new Date();
 	            	var currentYear = currentTime.getFullYear();
-	            	console.log(month);
+	            	console.log("Month: " + month);
+	            	console.log("Year: " + year);
 
 	            	if (currentYear == year) {
 	            	
@@ -131,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	            }
 				
 	            for(var j = 0; j < graphData.length; j++){
-					data.addRow([graphData[j].month, parseInt(graphData[j].totalPrice), parseInt(graphData[j].totalCost), parseInt(graphData[j].totalProfit)]);
+					dataTable.addRow([graphData[j].month, parseInt(graphData[j].totalPrice), parseInt(graphData[j].totalCost), parseInt(graphData[j].totalProfit)]);
 				}
 
 	            var options = {
@@ -147,7 +151,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	            	}
 	            }
 	            var chart = new google.charts.Bar(document.getElementById('bar_chart'));
-      			chart.draw(data, options);
+      			chart.draw(dataTable, options);
     		}
     	});
     }

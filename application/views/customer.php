@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="xampp/htdocs/htdocs/assets/css/main.css">
 	<title>Customer</title>
+	<style type="text/css">.modal-body { max-height: calc(100vh - 100px);overflow-y: auto;}</style>
 </head>
 <body>
 
@@ -86,10 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  
 	  $("#addCustomer").modal("show");
 	 })
-	 </script>';
-
-
-	
+	 </script>
 <?php } ?>
 
 <script type="text/javascript">
@@ -197,38 +195,47 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="modal-body">
 				<?php echo form_open('User/addCustomer');?>
 					<div class="form-group">
+						<?php echo form_error('forename'); ?>
 						<label for="forenameInput">Forename</label>
 						<input type="text" name="forename" id="forename" placeholder="John"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('surname'); ?>
 						<label for="surnameInput">Surname</label>
 						<input type="text" name="surname"  id="surname" placeholder="Smith"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('addressLine1'); ?>
 						<label for="addressLine1Input">Address Line 1</label>
 						<input type="text" name="addressLine1" id="addressLine1" placeholder="10 Example Road"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('addressLine2'); ?>
 						<label for="addressLine2Input">Address Line 2</label>
 						<input type="text" name="addressLine2" id="addressLine2" placeholder="Optional"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('addressLine3'); ?>
 						<label for="addressLine3Input">Address Line 3</label>
 						<input type="text" name="addressLine3" id="addressLine3" placeholder="Optional"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('city'); ?>
 						<label for="cityInput">City</label>
 						<input type="text" name="city" id="city" placeholder="Ipswich"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('postcode'); ?>
 						<label for="postcodeInput">Postcode</label>
 						<input type="text" name="postcode" id="postcode" placeholder="IP11 0ST"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('telephoneNumber'); ?>
 						<label for="telephoneNumberInput">Telephone Number</label>
 						<input type="text" name="telephoneNumber" id="telephoneNumber" placeholder="07950881070"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('email'); ?>
 						<label for="emailInput">Email</label>
 						<input type="text" name="email" id="email" placeholder="example@example.com"><br>
 					</div>
@@ -333,20 +340,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div class="container">
 	<div class="row">
-		<?php if($this->session->flashdata('error') != NULL) {
-		echo validation_errors();
-
-		echo '<script type="text/javascript"> 
-
-		$(document).ready(function() {
-		  
-		  $("#editCustomer").modal("show");
-		 })
-		 </script>';
-
-
-		
-	}?>
 				<h1>Welcome to the customer page</h1>
 				<?php echo form_open('User/searchCustomer');?>
 					<div class="form-inline">

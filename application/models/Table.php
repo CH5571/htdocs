@@ -1,6 +1,6 @@
 <?php 
 Class Table extends CI_Model {
-
+	//Add customer to the database
 	public function addCustomer($data){
 		$this->db->insert('customers', $data);
 	}
@@ -9,13 +9,6 @@ Class Table extends CI_Model {
 		$this->db->where('customerID', $customerID);
 		$this->db->update('customers', $data);
 	}
-
-	/*
-	public function deleteCustomer($id){
-		$this->db->where('customerID', $id);
-		$this->db->delete('customers');
-	}
-	*/
 
 	public function addMaterial($data){
 		$this->db->insert('materials', $data);
@@ -153,27 +146,14 @@ Class Table extends CI_Model {
 		return $query->result();
 	}
 
-	public function customerSearchID($search){
+	/*
+	* Return all columns where customerID column equals customerID variable
+	*/
+	public function customerSearchID($customerID){
 		$this->db->select('*');
 		$this->db->from('customers');
-		$this->db->where('customerID', $search);
+		$this->db->where('customerID', $customerID);
 		$query = $this->db->get();
-
-		/*foreach ($query->result() as $row){
-            $cdata = [
-                'forename' => $row->forename,
-                'surname' => $row->surname,
-                'addressLine1' => $row->addressLine1,
-                'addressLine2' => $row->addressLine2,
-                'addressLine3' => $row->addressLine3,
-                'city' => $row->city,
-                'postcode' => $row->postcode,
-                'telephoneNumber' => $row->telephoneNumber,
-                'email' => $row->email
-            ];
-
-        }
-        */
 
 		return $query->result();
 	}
@@ -213,6 +193,10 @@ Class Table extends CI_Model {
 		return $query->result();
 	}
 
+	/*
+	* Select items from jobmaterials and invoices table
+	* join them and return
+	*/
 	public function jMaterialSearchID($nextID){
 		$this->db->select('materialName, quantity, materials.price, hoursWorked, jobmaterials.totalCost');
 		$this->db->from('jobmaterials');

@@ -554,7 +554,11 @@ Class User extends CI_Controller{
 
 	}
 
+	/*
+	* Add customer to database
+	*/
 	public function addCustomer(){
+		//Validation rules
 		$this->form_validation->set_rules('forename', 'Forename', 'required|max_length[45]');
 		$this->form_validation->set_rules('surname', 'Surname', 'required|max_length[45]');
 		$this->form_validation->set_rules('addressLine1', 'AddressLine1', 'required|max_length[75]');
@@ -566,9 +570,11 @@ Class User extends CI_Controller{
 		$this->form_validation->set_rules('email', 'Email', 'required|max_length[75]');
 
 		if (!$this->form_validation->run()){
+			//If input is invalid set error to true and return data
 			$error = validation_errors();
 			$this->session->set_flashdata('error', 'true');
 
+			//Get get inputs
 			$forename = $this->input->post('forename');
 			$surname = $this->input->post('surname');
 			$addressLine1 = $this->input->post('addressLine1');
@@ -579,6 +585,7 @@ Class User extends CI_Controller{
 		    $telephoneNumber = $this->input->post('telephoneNumber');
 			$email = $this->input->post('email');
 
+			//Store inputs as associative array of objects
 			$customerData = (object) array(
 				'forename' => $forename,
 				'surname' => $surname,
@@ -594,10 +601,10 @@ Class User extends CI_Controller{
 			$data['customerError'] = $customerData;
 
 			$data['customer'] = $this->Table->getCustomers();
-
+			//Load customer page and send data back
 			$this->load->view('customer', $data);
 		} else {
-
+			//If data is valid store inputs
 			$forename = $this->input->post('forename');
 			$surname = $this->input->post('surname');
 			$addressLine1 = $this->input->post('addressLine1');
@@ -607,7 +614,7 @@ Class User extends CI_Controller{
 			$postcode = $this->input->post('postcode');
 		    $telephoneNumber = $this->input->post('telephoneNumber');
 			$email = $this->input->post('email');
-
+			//Add inputs to data array
 			$data = array(
 				'forename' => $forename,
 				'surname' => $surname,
@@ -620,13 +627,11 @@ Class User extends CI_Controller{
 				'email' => $email
 			);
 
-			//get current page
-			$currentPage = $this->uri->uri_string();
-
+			//Insert data array to customers table
 			$this->Table->addCustomer($data);
 
 			echo '<script>alert("Customer successfully added!");</script>';
-			//TODO Add code to determine users page so they are not redirected to an incorrect page
+			//redircet customers to customer page and refresh
 			redirect('User/customerPage', 'refresh');
 		}
 	}
@@ -696,7 +701,6 @@ Class User extends CI_Controller{
 
 	/*
 	* function to create pdf file of invoice
-	* TODO invLink value ID & edit & delete val id or hidden input
 	*/
 	public function createPdf(){
 		$gbp = utf8_decode("£");
@@ -708,6 +712,7 @@ Class User extends CI_Controller{
 
     	$date = date("Y/m/d");
 
+    	//Data from create invoice function
     	$nextID = $this->session->flashdata('nextID');
     	$customerID = $this->session->flashdata('customerID');
     	$totalCost = $this->session->flashdata('totalCost');
@@ -716,11 +721,12 @@ Class User extends CI_Controller{
     	//Get Customer info
     	$cdata = $this->Table->customerSearchID($customerID);
 
+    	//Print the date, invoice ID and "send to:" to pdf
     	$pdf->Cell(40,10,'Date: '.$date,0,1);
 	   	$pdf->Cell(40,10,'Invoice ID: MJH'.$nextID,0,1);
 	   	$pdf->Cell(40,10,'Send to: ');
     	
-    	//Main Body
+    	//Main Body - print customer details
     	foreach ($cdata as $res) {
 	   		$pdf->Cell(112.5,10,$res->forename.' '.$res->surname,0,2,'C');
 	   		$pdf->Cell(112.5,10,$res->addressLine1,0,2,'C');
@@ -741,23 +747,28 @@ Class User extends CI_Controller{
 	   		}
     	}
    		
-
+    	//Add space
    		$pdf->Ln(15);
 
+   		//Headings for table
    		$header = array('Item Name', 'Qty', 'Unit Cost', 'Hours Worked', 'Total');
+   		//Get jobmaterials data
    		$mdata = $this->Table->jMaterialSearchID($nextID);
 
+   		//Print headings
    		foreach($header as $col)
 	        $pdf->Cell(37.5,7,$col,1);
 	    $pdf->Ln();
 
+	    //Print job data
 	    foreach($mdata as $row)
 	    {
 	        foreach($row as $col)
 	            $pdf->Cell(37.5,6,$col,1);
 	        $pdf->Ln();
 	    }
-	     
+	    
+	    //Print total cost 
 	    $pdf->setX(122.5);
     	$pdf->Cell(37.5, 6, "Total", 1); 
     	$pdf->Cell(37.5, 6, $gbp . $totalCost, 1, 1);
@@ -768,15 +779,19 @@ Class User extends CI_Controller{
 	}
 
 	/*
-	* Controller to pass data for graph
+	* Controller to pass JSON encoded data to view
 	*
 	*/
 	public function getGraphData(){
-		$this->load->model('Visualisation');
-		$data = $this->Visualisation->getData();
+		if (!$this->ion_auth->logged_in()) {
+			redirect('User/index');
+		} else {
+			$this->load->model('Visualisation');
+			$data = $this->Visualisation->getData();
 
-		//Print data JSON encoded for AJAX 
-		echo json_encode($data);
+			//Print data JSON encoded for AJAX 
+			echo json_encode($data);
+		}
 	}
 
 	public function logout(){
