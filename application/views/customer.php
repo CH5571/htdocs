@@ -17,7 +17,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <?php if($this->session->flashdata('editError') === 'true') {
 	$this->session->set_flashdata('editError', 'false');
-	print_r($customerEdit->surname);
 	echo '<script type="text/javascript"> 
 
 	$(document).ready(function() {'; ?>
@@ -57,7 +56,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <?php if($this->session->flashdata('error') === 'true') {
 	$this->session->set_flashdata('error', 'false');
-	print_r($customerError->forename);
 	echo '<script type="text/javascript"> 
 
 	$(document).ready(function() {'; ?>
@@ -91,9 +89,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php } ?>
 
 <script type="text/javascript">
+	//Populate modal with customer data
 	function getCustomersEdit(customerID) {
 	console.log(customerID);
 
+	//AJAX call to getCustomerEditJson function
 	$.ajax({
 		url: "http://[::1]/htdocs/index.php/User/getCustomerEditJson",
 		type: "POST",
@@ -101,6 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		data: { 'q' : customerID },
 		 success: function(data) {
 		 		console.log(data);
+		 		//Populate modal with data
                 $("#customerIdJson").val(data[0].customerID);
                 $("#forenameJson").val(data[0].forename);
                 $("#surnameJson").val(data[0].surname);
@@ -343,6 +344,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<h1>Welcome to the customer page</h1>
 				<?php echo form_open('User/searchCustomer');?>
 					<div class="form-inline">
+						<?php echo form_error('search') ?>
 						<div class="form-group">
 							<input type="text" name="search" placeholder="14 Test Lane"><br>
 						</div>
@@ -383,6 +385,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</tbody>
 				</table>
 			<?php
+				echo $links; 
 				if ($this->session->flashdata('search')) { //Use Font Awesome?>
 				<a href="http://[::1]/htdocs/index.php/User/customerPage">Back</a>
 			<?php } ?>

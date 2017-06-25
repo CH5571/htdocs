@@ -4,13 +4,58 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
-	<title>Materials</title></head>
+	<link rel="stylesheet" type="text/css" href="xampp/htdocs/htdocs/assets/css/main.css">
+	<title>Material</title>
+	<style type="text/css">.modal-body { max-height: calc(100vh - 100px);overflow-y: auto;}</style>
+</head>
 <body>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<?php if($this->session->flashdata('error') === 'true') {
+	$this->session->set_flashdata('error', 'false');
+	echo '<script type="text/javascript"> 
+
+	$(document).ready(function() {'; ?>
+		
+		<?php echo 'var materialName = '.'"'.$materialError->materialName.'";'; ?>
+		<?php echo 'var price = '.'"'.$materialError->price.'";'; ?>		
+
+		console.log(materialName);
+
+        $("#materialName").val(materialName);
+        $("#price").val(price);
+        
+	  
+	  $("#addMaterial").modal("show");
+	 })
+	 </script>
+<?php } ?>
+
+<?php if($this->session->flashdata('editError') === 'true') {
+	$this->session->set_flashdata('editError', 'false');
+	echo '<script type="text/javascript"> 
+
+	$(document).ready(function() {'; ?>
+		
+		<?php echo 'var materialName = '.'"'.$materialEditError->materialName.'";'; ?>
+		<?php echo 'var price = '.'"'.$materialEditError->price.'";'; ?>		
+		<?php echo 'var materialID = '.'"'.$materialEditError->materialID.'";'; ?>	
+
+		console.log(materialName);
+
+        $("#materialNameJson").val(materialName);
+        $("#priceJson").val(price);
+        $("#materialIdJson").val(materialID);
+        
+	  
+	  $("#editMaterial").modal("show");
+	 })
+	 </script>
+<?php } ?>
 
 <script type="text/javascript">
 	/*
@@ -38,7 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <nav class="navbar navbar-default">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">Logo</a>
+			<a class="navbar-brand" href="#">M J Harris Electrical</a>
 		</div>
 		<ul class="nav navbar-nav navbar-left">
 			<li><a href="http://[::1]/htdocs/index.php/User/dashboard">Dashboard</a></li>
@@ -134,12 +179,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="modal-body">
 				<?php echo form_open('User/addMaterial');?>
 					<div class="form-group">
-						<label for="forenameInput">Material Name</label>
-						<input type="text" name="materialName" placeholder="Screw"><br>
+						<?php echo form_error('materialName'); ?>
+						<label for="materialNameInput">Material Name</label>
+						<input type="text" name="materialName" id="materialName" placeholder="Screw"><br>
 					</div>
 					<div class="form-group">
-						<label for="surnameInput">Price</label>
-						<input type="number" name="price" step="any" placeholder="£5.00"><br>
+						<?php echo form_error('price'); ?>
+						<label for="priceInput">Price</label>
+						<input type="number" name="price" id="price" step="any" placeholder="£5.00"><br>
 					</div>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary mdl">Add Material</button>
@@ -161,10 +208,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<?php echo form_open('User/editMaterial');?>
 					<input type="hidden" name="materialIdJson" id="materialIdJson">	
 					<div class="form-group">
+						<?php echo form_error('materialIdJson'); ?>
+						<?php echo form_error('materialNameJson'); ?>
 						<label for="forenameInput">Material Name</label>
 						<input type="text" name="materialNameJson" id="materialNameJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('priceJson'); ?>
 						<label for="surnameInput">Price</label>
 						<input type="number" name="priceJson" step="any" id="priceJson"><br>
 					</div>
@@ -182,6 +232,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<h1>Welcome to the Material page</h1>
 		<?php echo form_open('User/searchMaterial');?>
 			<div class="form-inline">
+				<?php echo form_error('search');?>
 				<div class="form-group">
 					<input type="text" name="search" placeholder="Item"><br>
 				</div>
@@ -208,6 +259,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</tbody>
 		</table> 
 		<?php
+		echo $links;
 		if ($this->session->flashdata('search')) { //Use Font Awesome?>
 			<a href="http://[::1]/htdocs/index.php/User/materialPage">Back</a>
 	    <?php } ?>

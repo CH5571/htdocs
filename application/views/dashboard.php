@@ -470,6 +470,7 @@ function getMaterials() {
 	<div class="row">
 		<?php echo form_open('User/searchInvoiceDash');?>
 		<div class="form-inline">
+			<?php echo form_error('search'); ?>
 			<div class="form-group">
 				<input type="text" name="search" placeholder="Address Line 1"><br>
 			</div>

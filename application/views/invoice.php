@@ -14,39 +14,110 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 <?php if($this->session->flashdata('error') === 'true') {
-$this->session->set_flashdata('error', 'false');
-echo '<script type="text/javascript"> 
+	$this->session->set_flashdata('error', 'false');
+	echo '<script type="text/javascript"> 
 
-$(document).ready(function() {'; ?>
-	<?php foreach($invoice as $invoices) { ?>
-	  	<?php echo 'var invoiceID = '.$invoices->invoiceID.';'; ?>
-		'hoursWorked' => $hoursWorked,
-		'jobDescription' => $jobDescription,
-		'totalCost' => $invoiceTotalCost,
-		'totalPrice' => $totalPrice,
-		'dateCompleted' => $dateCompleted,
-		'paid' => $paid,
-		'invoiceLink' => $filename,
-		'customersID' => $customerID,
-	<?php } ?>
+	$(document).ready(function() {'; ?>
+		
+		<?php echo 'var customerID = '.'"'.$invoiceError->customerID.'";'; ?>
+		<?php echo 'var hoursWorked = '.'"'.$invoiceError->hoursWorked.'";'; ?>
+		<?php echo 'var totalPrice = '.'"'.$invoiceError->totalPrice.'";'; ?>
+		<?php echo 'var jobDescription = '.'"'.$invoiceError->jobDescription.'";'; ?>
+		<?php echo 'var dateCompleted = '.'"'.$invoiceError->dateCompleted.'";'; ?>
+		<?php echo 'var paidOptions = '.'"'.$invoiceError->paidOptions.'";'; ?>	
+		<!-- Iterate through materials and add to table -->
+		<?php foreach ($materialError as $materialErrors) { ?> 
+        	<?php echo 'var materialID = '.'"'.$materialErrors->materialID.'";'; ?>
+        	<?php echo 'var materialQty = '.'"'.$materialErrors->quantity.'";'; ?>
+        	<?php echo 'var materialPrice = '.'"'.$materialErrors->totalCost.'";'; ?>
+        	addTableRowError(materialID, materialQty, materialPrice);
+        <?php } ?>	
 
-	console.log(surname);
+		console.log(totalPrice);
 
-	$("#invoiceIdJson").val(invoiceID);
-    $("#hoursWorkedJson").val(hoursWorked);
-    $("#jobDescriptionJson").val(jobDescription);
-    $("#paidJson").val(paid);
-    $("#customersIDJson").val(customersID);
-  
-  $("#editInvoice").modal("show");
- })
- </script>';
-	
+        getFirstAddressError(customerID);
+        $("#hoursWorked").val(hoursWorked);
+        $("#totalPrice").val(totalPrice);
+        $("#jobDescription").val(jobDescription);
+        $("#dateCompleted").val(dateCompleted);
+        <?php if ($invoiceError->paidOptions == 1) { ?>
+            	$('#paidRadioJson').prop('checked', true);
+        <?php    } ?>
+	  
+	  $("#addInvoice").modal("show");
+	 })
+	 </script>
+<?php } ?>
+
+<?php if($this->session->flashdata('editError') === 'true') {
+	$this->session->set_flashdata('editError', 'false');
+	echo '<script type="text/javascript"> 
+
+	$(document).ready(function() {'; ?>
+
+		<?php echo 'var invoiceID = '.'"'.$invoiceError->invoiceID.'";'; ?>	
+		<?php echo 'var customerID = '.'"'.$invoiceError->customerID.'";'; ?>
+		<?php echo 'var hoursWorked = '.'"'.$invoiceError->hoursWorked.'";'; ?>
+		<?php echo 'var totalPrice = '.'"'.$invoiceError->totalPrice.'";'; ?>
+		<?php echo 'var jobDescription = '.'"'.$invoiceError->jobDescription.'";'; ?>
+		<?php echo 'var dateCompleted = '.'"'.$invoiceError->dateCompleted.'";'; ?>
+		<?php echo 'var paidOptions = '.'"'.$invoiceError->paidOptions.'";'; ?>	
+		<!-- Iterate through materials and add to table -->
+		<?php foreach ($materialError as $materialErrors) { ?> 
+        	<?php echo 'var materialID = '.'"'.$materialErrors->materialID.'";'; ?>
+        	<?php echo 'var materialQty = '.'"'.$materialErrors->quantity.'";'; ?>
+        	<?php echo 'var materialPrice = '.'"'.$materialErrors->totalCost.'";'; ?>
+        	addTableRowErrorEdit(materialID, materialQty, materialPrice);
+        <?php } ?>	
+
+		console.log(totalPrice);
+
+        getFirstAddressErrorEdit(customerID);
+        $("#hoursWorkedJson").val(hoursWorked);
+        $("#invoiceIDJson").val(invoiceID);
+        $("#totalPriceJson").val(totalPrice);
+        $("#jobDescriptionJson").val(jobDescription);
+        $("#dateCompletedJson").val(dateCompleted);
+        <?php if ($invoiceError->paidOptions == 1) { ?>
+            	$('#paidRadioJson').prop('checked', true);
+        <?php    } ?>
+	  
+	  $("#editInvoice").modal("show");
+	 })
+	 </script>
 <?php } ?>
 
 <script type="text/javascript">
 
 var count = 0;
+
+function addTableRowError(materialID, materialQty, materialPrice){
+	$.ajax({
+	url: "http://[::1]/htdocs/index.php/User/getMaterialEditJson",
+	type: "POST",
+	dataType: "json",
+	data: { 'q' : materialID },
+	 success: function(data) {
+	 		console.log(data);
+            $('#materialTable > tbody:last-child').last().append('<tr class="materialRow" id="materialRow'+count+'"><td>'+data[0].materialName+'</td><td class="materialQty">'+materialQty+'</td><td>'+materialPrice+'</td><input type="hidden" name="materialQtyData[]" value="'+materialQty+'"/><input type="hidden" name="materialTotalPrice[]" value="'+materialPrice+'"/><input type="hidden" name="materialIdData[]" value="'+materialID+'"/><td><a class="btn btn-danger" id="'+count+'" role="button" onclick="removeRowEdit(this.id);">Remove</a></td></tr>');
+            count++;
+            }
+          });
+}
+
+function addTableRowErrorEdit(materialID, materialQty, materialPrice){
+	$.ajax({
+	url: "http://[::1]/htdocs/index.php/User/getMaterialEditJson",
+	type: "POST",
+	dataType: "json",
+	data: { 'q' : materialID },
+	 success: function(data) {
+	 		console.log(data);
+            $('#materialTableJson > tbody:last-child').last().append('<tr class="materialRowJson" id="materialRow'+count+'"><td>'+data[0].materialName+'</td><td class="materialQtyJson">'+materialQty+'</td><td>'+materialPrice+'</td><input type="hidden" name="materialQtyDataJson[]" value="'+materialQty+'"/><input type="hidden" name="materialTotalPriceJson[]" value="'+materialPrice+'"/><input type="hidden" name="materialIdDataJson[]" value="'+materialID+'"/><td><a class="btn btn-danger" id="'+count+'" role="button" onclick="removeRowEdit(this.id);">Remove</a></td></tr>');
+                count++;
+            }
+          });
+}
 
 function getInvoiceEdit(invoiceID) {
 console.log(invoiceID);
@@ -93,6 +164,40 @@ function getFirstAddressEdit(customerID) {
 	});
 }
 
+function getFirstAddressErrorEdit(customerID) {
+	$.ajax({
+		url: "http://[::1]/htdocs/index.php/User/getCustomerEditJson",
+		type: "POST",
+		dataType: "json",
+		data: { 'q' : customerID },
+		 success: function(data) {
+		 		console.log(data);
+                $('select#customerSelectJson').html('');
+                for(var i=0;i<data.length;i++)
+                {
+                    $("<option />").val(data[i].customerID).text(data[i].addressLine1).appendTo($('select#customerSelectJson'));
+                }
+              }
+	});
+}
+
+function getFirstAddressError(customerID) {
+	$.ajax({
+		url: "http://[::1]/htdocs/index.php/User/getCustomerEditJson",
+		type: "POST",
+		dataType: "json",
+		data: { 'q' : customerID },
+		 success: function(data) {
+		 		console.log(data);
+                $('#customerSelect').html('');
+                for(var i=0;i<data.length;i++)
+                {
+                    $("<option />").val(data[i].customerID).text(data[i].addressLine1).appendTo($('#customerSelect'));
+                }
+              }
+	});
+}
+
 function outputTable(invoiceID){
 	$.ajax({
 	url: "http://[::1]/htdocs/index.php/User/jobMaterialsEditJson",
@@ -109,6 +214,9 @@ function outputTable(invoiceID){
 });
 }
 
+/*
+* Search for customers and add results to customer select
+*/
 function getCustomers() {
 	console.log($('#invoiceCustomer').val());
 
@@ -120,6 +228,7 @@ function getCustomers() {
 		 success: function(data) {
 		 		console.log(data);
                 $('select#customerSelect').html('');
+                //Add results
                 for(var i=0;i<data.length;i++)
                 {
                     $("<option />").val(data[i].customerID).text(data[i].addressLine1).appendTo($('select#customerSelect'));
@@ -147,12 +256,16 @@ function getCustomersEdit() {
 	});
 }
 
+/*
+* Append row to materials table
+*/
 function addMaterialTbl() {
+	//Get current data
 	var selectedName = $('#materialSelect option:selected').text();
 	var selectedID = $('#materialSelect option:selected').val();
 	var selectedQty = $('#materialQty').val();
 	var materialArray = {materialID:selectedID, materialName:selectedName, quantity:selectedQty}; //Add price
-
+	//Make AJAX call
 	$.ajax({
 		url: "http://[::1]/htdocs/index.php/User/getMaterialPriceJson",
 		type: "POST",
@@ -162,6 +275,7 @@ function addMaterialTbl() {
 		 		console.log("Data: "+data);  
 		 		var selectedPrice = data[0].price;
 		 		var totalCost = selectedPrice * selectedQty;
+		 		//Append row to table
                 $('#materialTable > tbody:last-child').last().append('<tr class="materialRow" id="materialRow'+count+'"><td>'+selectedName+'</td><td class="materialQty">'+selectedQty+'</td><td>'+totalCost+'</td><input type="hidden" name="materialQtyData[]" value="'+selectedQty+'"/><input type="hidden" name="materialTotalPrice[]" value="'+totalCost+'"/><input type="hidden" name="materialIdData[]" value="'+selectedID+'"/><td><a class="btn btn-danger" id="'+count+'" role="button" onclick="removeRowEdit(this.id);">Remove</a></td></tr>');
               }
 	});
@@ -224,7 +338,9 @@ $('#materialSelect')
 	.change();
 */
 
-
+/*
+* Get materials from input and populate dropdown
+*/
 function getMaterials() {
 	$.ajax({
 		url: "http://[::1]/htdocs/index.php/User/getMaterialJson",
@@ -267,6 +383,9 @@ function getMaterialsEdit() {
 	});
 }
 
+/*
+* Remove material row
+*/
 function removeRowEdit(rowid){ 
 	var row = "#materialRow" + rowid;
 	$(row).remove();
@@ -400,6 +519,7 @@ function removeRowEdit(rowid){
 			<div class="modal-body">
 				<?php echo form_open('User/addInvoiceController'); ?>
 					<div class="form-group">
+						<?php echo form_error('customerSelect'); ?>
 						<label for="customerInput">Customer</label>
 						<input type="text" name="invoiceCustomer" id="invoiceCustomer" onkeyup="getCustomers();">
 						<select id="customerSelect" name="customerSelect">
@@ -407,23 +527,28 @@ function removeRowEdit(rowid){
 						</select><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('hoursWorked'); ?>
 						<label for="hoursWorkedInput">Hours Worked</label>
-						<input type="number" name="hoursWorked" placeholder="5"><br>
+						<input type="number" name="hoursWorked" id="hoursWorked" placeholder="5"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('totalPrice'); ?>
 						<label for="totalPriceInput">Total Price</label>
-						<input type="number" step="0.01" name="totalPrice" placeholder="100.00"><br>
+						<input type="number" step="0.01" name="totalPrice" id="totalPrice" placeholder="100.00"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('jobDescription'); ?>
 						<label for="jobDescriptionInput">Job Description</label>
-						<input type="text" name="jobDescription" placeholder="Optional"><br>
+						<input type="text" name="jobDescription" id="jobDescription" placeholder="Optional"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('dateCompleted'); ?>
 						<label for="dateCompletedInput">Date Completed</label>
-						<input type="date" name="dateCompleted"><br>
+						<input type="date" name="dateCompleted" id="dateCompleted"><br>
 					</div>
 					<div class="form-group">
 						<div class="radio">
+							<?php echo form_error('paidOptions'); ?>
 						  <label>
 						    <input type="radio" name="paidOptions" id="paidRadio" value="1">
 						    Paid
@@ -437,6 +562,9 @@ function removeRowEdit(rowid){
 						</div>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('materialIdData[]'); ?>
+						<?php echo form_error('materialQtyData[]'); ?>
+						<?php echo form_error('materialTotalPrice[]'); ?>
 						<label for="materialInput">Material</label>
 						<input type="text" name="materialInput" id="materialInput" onkeyup="getMaterials();">
 					</div>
@@ -491,6 +619,7 @@ function removeRowEdit(rowid){
 				<?php echo form_open('User/editInvoice'); ?>
 					<input type="hidden" name="invoiceIDJson" id="invoiceIDJson">
 					<div class="form-group">
+						<?php echo form_error('customerSelectJson'); ?>
 						<label for="customerInput">Customer</label>
 						<input type="text" name="invoiceCustomerJson" id="invoiceCustomerJson" onkeyup="getCustomersEdit();">
 						<select id="customerSelectJson" name="customerSelectJson">
@@ -498,22 +627,27 @@ function removeRowEdit(rowid){
 						</select><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('hoursWorkedJson'); ?>
 						<label for="hoursWorkedInput">Hours Worked</label>
 						<input type="number" name="hoursWorkedJson" placeholder="5" id="hoursWorkedJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('totalPriceJson'); ?>
 						<label for="totalPriceInput">Total Price</label>
 						<input type="number" step="0.01" name="totalPriceJson" placeholder="100.00" id="totalPriceJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('jobDescriptionJson'); ?>
 						<label for="jobDescriptionInput">Job Description</label>
 						<input type="text" name="jobDescriptionJson" placeholder="Optional" id="jobDescriptionJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('dateCompletedJson'); ?>
 						<label for="dateCompletedInput">Date Completed</label>
 						<input type="date" name="dateCompletedJson" id="dateCompletedJson"><br>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('paidOptionsJson'); ?>
 						<div class="radio">
 						  <label>
 						    <input type="radio" name="paidOptionsJson" id="paidRadioJson" value="1">
@@ -528,6 +662,9 @@ function removeRowEdit(rowid){
 						</div>
 					</div>
 					<div class="form-group">
+						<?php echo form_error('materialIdDataJson'); ?>
+						<?php echo form_error('materialQtyDataJson'); ?>
+						<?php echo form_error('materialTotalPriceJson'); ?>
 						<label for="materialInput">Material</label>
 						<input type="text" name="materialInputJson" id="materialInputJson" onkeyup="getMaterialsEdit();">
 					</div>
@@ -576,6 +713,7 @@ function removeRowEdit(rowid){
 		<h1>Welcome to the Invoice page</h1>
 		<?php echo form_open('User/searchInvoice');?>
 			<div class="form-inline">
+				<?php echo form_error('search') ?>
 				<div class="form-group">
 					<input type="text" name="search" placeholder="Address Line 1"><br>
 				</div>
@@ -611,12 +749,15 @@ function removeRowEdit(rowid){
 						<td><a <?php echo 'href="http://[::1]/htdocs/assets/pdf/'.$invoices->invoiceLink.'"';?> target="_blank">Invoice</a></td>
 						<td><a class="btn btn-secondary" data-toggle="modal" data-target="#editInvoice" <?php echo'id="'.$invoices->invoiceID . '"' ?> role="button" onclick="getInvoiceEdit(this.id); outputTable(this.id);">Edit</a></td>
 						<td><a class="btn btn-danger" <?php echo 'href="http://[::1]/htdocs/index.php/User/deleteInvoice/'.$invoices->invoiceID . '"' ?> role="button">Delete</a></td>
+						<?php if($invoices->paid == 1) {
+						echo '<td><a class="btn btn-success" href="http://[::1]/htdocs/index.php/User/markAsPaid/'.$invoices->invoiceID.'"</a>Mark Paid</td>'; } ?>
 								
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table> 
 		<?php
+		echo $links; 
 		if ($this->session->flashdata('search')) { //Use Font Awesome?>
 			<a href="http://[::1]/htdocs/index.php/User/invoicePage">Back</a>
 	    <?php } ?>
